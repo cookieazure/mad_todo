@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.android.master.mad.todo"
+            android:name=".data.TaskProvider" />
+
     </application>
 
 </manifest>
