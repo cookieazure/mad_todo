@@ -5,4 +5,7 @@ package com.android.master.mad.todo;
  * Basic utility class.
  */
 public class Utility {
+
+    private final String LOG_TAG = StartupActivity.class.getSimpleName();
+
 }
