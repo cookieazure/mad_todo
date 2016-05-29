@@ -1,5 +1,6 @@
 package com.android.master.mad.todo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +25,17 @@ public class StartupActivity extends AppCompatActivity {
             Log.i(LOG_TAG, "Web interface not available.");
             Toast.makeText(StartupActivity.this, "The web interface is not available. Only local storage is used.", Toast.LENGTH_LONG).show();
         }
+
+        try
+        {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(this, TaskActivity.class);
+        startActivity(intent);
+
     }
 
     private boolean isWebInterfaceAvailable(){

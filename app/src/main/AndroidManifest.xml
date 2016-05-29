@@ -13,21 +13,28 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="http"
-                      android:host="example.com"
-                      android:pathPrefix="/todo" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <data
+                    android:host="example.com"
+                    android:pathPrefix="/todo"
+                    android:scheme="http"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
-        <provider
-            android:authorities="com.android.master.mad.todo"
-            android:name=".data.TaskProvider" />
 
+        <provider
+            android:name=".data.TaskProvider"
+            android:authorities="com.android.master.mad.todo"/>
+
+        <activity android:name=".TaskActivity">
+        </activity>
     </application>
 
 </manifest>
