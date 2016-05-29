@@ -6,6 +6,6 @@ package com.android.master.mad.todo;
  */
 public class Utility {
 
-    private final String LOG_TAG = StartupActivity.class.getSimpleName();
+    private final String LOG_TAG = Utility.class.getSimpleName();
 
 }

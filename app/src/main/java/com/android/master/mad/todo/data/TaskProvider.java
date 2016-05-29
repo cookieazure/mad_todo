@@ -9,15 +9,13 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.android.master.mad.todo.StartupActivity;
-
 /**
  * Created by Cookie on 29.05.2016.
  * Content provider for tasks.
  */
 public class TaskProvider extends ContentProvider{
 
-    private final String LOG_TAG = StartupActivity.class.getSimpleName();
+    private final String LOG_TAG = TaskProvider.class.getSimpleName();
 
     // The URI Matcher used by this content provider.
     private static final UriMatcher uriMatcher = buildUriMatcher();

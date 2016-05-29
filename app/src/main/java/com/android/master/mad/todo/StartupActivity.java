@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * Created by Cookie on 28.05.2016.
  * Startup activity showing a simple splash screen and checking connection to web interface.
  */
 public class StartupActivity extends AppCompatActivity {

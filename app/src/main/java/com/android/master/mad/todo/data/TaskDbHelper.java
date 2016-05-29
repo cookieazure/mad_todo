@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.android.master.mad.todo.StartupActivity;
 import com.android.master.mad.todo.data.TaskContract.Task;
 
 /**
@@ -13,7 +12,7 @@ import com.android.master.mad.todo.data.TaskContract.Task;
  */
 public class TaskDbHelper extends SQLiteOpenHelper {
 
-    private final String LOG_TAG = StartupActivity.class.getSimpleName();
+    private final String LOG_TAG = TaskDbHelper.class.getSimpleName();
 
     private static final int DATABASE_VERSION = 1;
 
