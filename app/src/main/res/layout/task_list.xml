@@ -10,5 +10,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.android.master.mad.todo.TaskListFragment"
-    tools:listitem="@layout/fragment_task_list_item"/>
+    tools:context="com.android.master.mad.todo.TaskActivity"
+    tools:listitem="@layout/task_list_item"/>
