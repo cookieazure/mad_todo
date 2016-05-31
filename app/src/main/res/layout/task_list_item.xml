@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/btn_star"
-        android:onClick="onCheckboxClicked" />
+        android:onClick="onClick" />
 
     <LinearLayout
         android:id="@+id/task_item_text"
@@ -39,5 +39,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:onClick="onCheckboxClicked" />
+        android:onClick="onClick" />
 </RelativeLayout>
