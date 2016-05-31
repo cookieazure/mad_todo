@@ -1,33 +1,42 @@
 package com.android.master.mad.todo;
 
-import android.support.design.widget.FloatingActionButton;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.android.master.mad.todo.data.TaskContract;
 
 public class TaskActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String LOG_TAG = TaskActivity.class.getSimpleName();
 
+    private TaskAdapter taskAdapter;
+    private ListView taskList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        View recyclerView = findViewById(R.id.task_list);
-        assert recyclerView != null;
-        //TODO
-        ((RecyclerView)recyclerView).setAdapter(null);
+        taskList = (ListView) findViewById(R.id.task_list);
+
+        Uri taskUri = TaskContract.Task.CONTENT_URI;
+        Cursor cursor = getContentResolver().query(taskUri, null, null, null, null);
+
+        taskAdapter = new TaskAdapter(this, cursor, 0);
+        taskList.setAdapter(taskAdapter);
     }
 
     @Override
     public void onClick(View view) {
         Log.d(LOG_TAG, ": onClick()");
-        boolean checked = ((CheckBox) view).isChecked();
 
         switch(view.getId()) {
             case R.id.task_item_check_done:

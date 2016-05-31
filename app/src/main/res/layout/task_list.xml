@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<android.widget.ListView
     android:id="@+id/task_list"
-    android:name="com.android.master.mad.test.TaskListFragment"
+    android:name="com.android.master.mad.test.TaskActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
