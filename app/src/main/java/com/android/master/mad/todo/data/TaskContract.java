@@ -46,7 +46,7 @@ public class TaskContract{
         // Indicator if task is finished
         public static final String COLUMN_DONE = "done";
         // Indicator if task is a priority
-        public static final String COLUMN_PRIO = "priority";
+        public static final String COLUMN_FAV = "priority";
         // Associated contacts for task
         public static final String COLUMN_CONTACTS = "contacts";
         // Associated location for task
