@@ -19,7 +19,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
 
     private final String LOG_TAG = TaskActivity.class.getSimpleName();
 
-    private static final int TASK_LOADER = 001;
+    private static final int TASK_LOADER = 1;
 
     private TaskAdapter taskAdapter;
     private ListView taskList;
@@ -27,7 +27,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task);
+        setContentView(R.layout.fragment_task_list);
 
         taskList = (ListView) findViewById(R.id.task_list);
         taskAdapter = new TaskAdapter(this, null, 0);
