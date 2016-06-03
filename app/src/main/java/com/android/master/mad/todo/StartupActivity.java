@@ -2,6 +2,7 @@ package com.android.master.mad.todo;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -39,9 +40,9 @@ public class StartupActivity extends AppCompatActivity implements IAsyncResponse
         } else{
             Log.i(LOG_TAG, "Web interface not available.");
             Toast.makeText(StartupActivity.this, "The web interface is not available. Only local storage is used.", Toast.LENGTH_LONG).show();
-//            Intent intent Intent= new Intent(this, TaskActivity.class);
-//            intent.putExtra("WebInterface", false);
-//            startActivity(intent);
+            Intent intent = new Intent(this, TaskActivity.class);
+            intent.putExtra("WebInterface", false);
+            startActivity(intent);
         }
     }
 
@@ -61,7 +62,6 @@ public class StartupActivity extends AppCompatActivity implements IAsyncResponse
         Log.d(LOG_TAG, ": checkConnection().");
         ConnectivityManager conManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = conManager.getActiveNetworkInfo();
-        Log.d(LOG_TAG, "Connection is: " + (activeNetwork != null) + " : " + activeNetwork.isConnectedOrConnecting());
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 

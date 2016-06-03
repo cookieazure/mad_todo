@@ -49,8 +49,8 @@ public class TaskContract{
         public static final String COLUMN_FAV = "priority";
         // Associated contacts for task
         public static final String COLUMN_CONTACTS = "contacts";
-        // Associated location for task
-        public static final String COLUMN_LOC = "location";
+//        // Associated location for task
+//        public static final String COLUMN_LOC = "location";
 
         public static Uri buildTaskUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
