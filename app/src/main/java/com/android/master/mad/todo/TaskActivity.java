@@ -3,36 +3,60 @@ package com.android.master.mad.todo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ListView;
 
 import com.android.master.mad.todo.data.Task;
+import com.android.master.mad.todo.data.TaskContract;
 import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
 
-public class TaskActivity extends AppCompatActivity{
+public class TaskActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private final String LOG_TAG = TaskActivity.class.getSimpleName();
+
+    private static final int TASK_LOADER = 1;
+
+    private TaskAdapter taskAdapter;
+    private ListView taskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, " : onCreate().");
-        setContentView(R.layout.activity_tasks);
+        setContentView(R.layout.activity_task_list);
 
         //TODO Datenabgleich.
         addTestData();
 
-        if(findViewById(R.id.fragment_container) != null){
-            if (savedInstanceState != null) {
-                return;
-            }
-            TaskListFragment taskListFragment = new TaskListFragment();
-            taskListFragment.setArguments(getIntent().getExtras());
+        taskList = (ListView) findViewById(R.id.task_list);
+        taskAdapter = new TaskAdapter(this, null, 0);
+        taskList.setAdapter(taskAdapter);
 
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, taskListFragment).commit();
+        getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
+    }
 
-        }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        Uri taskUri = TaskContract.Task.CONTENT_URI;
+
+        //TODO initialize sort order
+
+        return new CursorLoader(this, taskUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        taskAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        taskAdapter.swapCursor(null);
     }
 
     private void addTestData(){

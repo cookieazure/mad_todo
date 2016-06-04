@@ -3,17 +3,25 @@
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/fragment_task_list_toolbar"
+        android:id="@+id/activity_task_list_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <FrameLayout
-        android:id="@+id/fragment_task_list"
+    <android.widget.ListView
+        android:id="@+id/task_list"
+        android:name="com.android.master.mad.test.TaskActivity"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include layout="@layout/task_list" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.android.master.mad.todo.TaskActivity"
+        tools:listitem="@layout/task_list_item"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fragment_task_list_fab"

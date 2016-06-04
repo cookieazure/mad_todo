@@ -32,8 +32,7 @@ public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
     @Override
     public Uri insert(Task task) {
         ContentValues newValues = generateContentValues(task);
-        Uri result = context.getContentResolver().insert(TaskContract.Task.CONTENT_URI, newValues);
-        return result;
+        return context.getContentResolver().insert(TaskContract.Task.CONTENT_URI, newValues);
     }
 
     @Override

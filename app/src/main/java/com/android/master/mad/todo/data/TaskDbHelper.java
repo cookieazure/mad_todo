@@ -3,6 +3,7 @@ package com.android.master.mad.todo.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.android.master.mad.todo.data.TaskContract.Task;
 
@@ -30,6 +31,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(LOG_TAG, " : onCreate().");
         // Create a table to hold locations.  A location consists of the string supplied in the
         // location setting, the city name, and the latitude and longitude
         final String SQL_CREATE_TASKS_TABLE = "CREATE TABLE " + Task.TABLE_NAME + " (" +
@@ -67,6 +69,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(LOG_TAG, " : onUpdate().");
         // Hard database upgrade.
         db.execSQL("DROP TABLE IF EXISTS " + Task.TABLE_NAME);
         onCreate(db);
