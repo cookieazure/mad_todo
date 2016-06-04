@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/fragment_task_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include layout="@layout/task_list" />
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/task_list_fab"
+        android:id="@+id/fragment_task_list_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/colorBackground"
         android:onClick="onClick"
         android:src="@android:drawable/ic_input_add" />
 

@@ -47,7 +47,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.task_item_check_fav:
                 ((CheckBox) view).toggle();
                 break;
-            case R.id.task_list_fab:
+            case R.id.fragment_task_list_fab:
                 Toast.makeText(TaskActivity.this, "FAB pressed.", Toast.LENGTH_LONG).show();
                 break;
             default:
