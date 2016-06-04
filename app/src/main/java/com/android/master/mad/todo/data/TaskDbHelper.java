@@ -34,7 +34,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         // location setting, the city name, and the latitude and longitude
         final String SQL_CREATE_TASKS_TABLE = "CREATE TABLE " + Task.TABLE_NAME + " (" +
                 Task._ID + " INTEGER PRIMARY KEY, " +
-                Task.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
+                Task.COLUMN_NAME + " TEXT, " +
                 Task.COLUMN_DESC + " TEXT, " +
                 Task.COLUMN_DATE + " INTEGER, " +
                 Task.COLUMN_DONE + " INTEGER NOT NULL, " +

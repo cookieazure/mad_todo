@@ -150,7 +150,7 @@ public class TaskProvider extends ContentProvider{
         Uri returnUri;
 
         switch (match) {
-            case SINGLE_TASK: {
+            case TASKS: {
                 long _id = db.insert(TaskContract.Task.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = TaskContract.Task.buildTaskUri(_id);

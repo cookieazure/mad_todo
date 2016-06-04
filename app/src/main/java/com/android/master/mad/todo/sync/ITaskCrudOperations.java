@@ -14,7 +14,7 @@ import retrofit2.http.Path;
 
 /**
  * Created by misslert on 02.06.2016.
- * Interface for CURD operations on web service.
+ * Interface for CRUD operations on web service.
  */
 public interface ITaskCrudOperations {
 
