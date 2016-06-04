@@ -20,7 +20,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.android.master.mad.todo.TaskActivity"
+        tools:context=".TaskListActivity"
         tools:listitem="@layout/task_list_item"/>
 
     <android.support.design.widget.FloatingActionButton

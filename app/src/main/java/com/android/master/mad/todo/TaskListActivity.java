@@ -14,21 +14,22 @@ import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
 import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
 
-public class TaskActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class TaskListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private final String LOG_TAG = TaskActivity.class.getSimpleName();
+    private final String LOG_TAG = TaskListActivity.class.getSimpleName();
 
     private static final int TASK_LOADER = 1;
 
     private TaskAdapter taskAdapter;
     private ListView taskList;
+    private boolean online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, " : onCreate().");
         setContentView(R.layout.activity_task_list);
-
+        online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
         //TODO Datenabgleich.
         addTestData();
 

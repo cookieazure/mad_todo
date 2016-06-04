@@ -42,8 +42,8 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         } else{
             Log.i(LOG_TAG, "Web interface not available.");
             Toast.makeText(StartupActivity.this, "The web interface is not available. Only local storage is used.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, TaskActivity.class);
-            intent.putExtra("WebInterface", false);
+            Intent intent = new Intent(this, TaskListActivity.class);
+            intent.putExtra(getString(R.string.intent_web_service), false);
             startActivity(intent);
         }
     }
