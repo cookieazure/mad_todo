@@ -1,6 +1,7 @@
 package com.android.master.mad.todo.data;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -10,16 +11,25 @@ import java.util.ArrayList;
 public class Task {
 
     // Data fields for task.
+    @SerializedName("id")
     private long id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("description")
     private String description;
     // Data and Time
+    @SerializedName("expiry")
     private long expiry;
+    @SerializedName("done")
     private boolean done;
+    @SerializedName("favourite")
     private boolean favourite;
     // Associations
-    private ArrayList<String> contacts;
-    private SimpleLocation location;
+    @SerializedName("contacts")
+    private String simpleContacts;
+    private transient ArrayList<String> contacts;
+    // @SerializedName("location")
+    // private SimpleLocation location;
 
 
     // Default constructor
@@ -93,20 +103,43 @@ public class Task {
         this.favourite = favourite;
     }
 
+    public String getSimpleContacts() {
+        return simpleContacts;
+    }
+
+    public void setSimpleContacts(String simpleContacts) {
+        this.simpleContacts = simpleContacts;
+    }
+
     public ArrayList<String> getContacts() {
         return contacts;
     }
 
     public void setContacts(ArrayList<String> contacts) {
         this.contacts = contacts;
+        updateSimpleContacts();
     }
 
-    public SimpleLocation getLocation() {
-        return location;
+    public void addContact(String contact){
+        contacts.add(contact);
+        updateSimpleContacts();
     }
 
-    public void setLocation(SimpleLocation location) {
-        this.location = location;
+    public void removeContact(String contact){
+        contacts.remove(contact);
+        updateSimpleContacts();
     }
 
+
+//    public SimpleLocation getLocation() {
+//        return location;
+//    }
+//
+//    public void setLocation(SimpleLocation location) {
+//        this.location = location;
+//    }
+
+    private void updateSimpleContacts(){
+        this.simpleContacts = this.contacts.toArray().toString();
+    }
 }
