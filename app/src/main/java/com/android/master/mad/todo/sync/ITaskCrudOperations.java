@@ -18,18 +18,18 @@ import retrofit2.http.Path;
  */
 public interface ITaskCrudOperations {
 
-    @GET("/todos/{itemId}")
+    @GET("todos/{itemId}")
     Call<Task> read(@Path("itemId")long id);
 
-    @GET("/todos")
+    @GET("todos")
     Call<List<Task>> readAll();
 
-    @POST("/todos")
+    @POST("todos")
     Call<Task> insert(@Body Task task);
 
-    @PUT("/todos/{itemId}")
+    @PUT("todos/{itemId}")
     Call<Task> update(@Path("itemId") long id, @Body Task task);
 
-    @DELETE("/todos/{itemId}")
+    @DELETE("todos/{itemId}")
     Call<Boolean> delete(@Path("itemId")long id);
 }

@@ -130,7 +130,6 @@ public class Task {
         updateSimpleContacts();
     }
 
-
 //    public SimpleLocation getLocation() {
 //        return location;
 //    }
