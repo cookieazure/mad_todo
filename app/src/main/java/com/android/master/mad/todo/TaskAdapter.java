@@ -36,8 +36,8 @@ public class TaskAdapter extends CursorAdapter {
         CheckBox fav = (CheckBox) view.findViewById(R.id.task_item_check_fav);
 
         done.setChecked(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE) != 0);
-        name.setText(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME));
-        text.setText(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE));
+        name.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
+        text.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
         fav.setChecked(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV) != 0);
 
     }
