@@ -15,23 +15,24 @@
         <activity
             android:name=".StartupActivity"
             android:theme="@style/SplashTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <data
                     android:host="example.com"
                     android:pathPrefix="/todo"
                     android:scheme="http"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
+
         </activity>
+
         <activity android:name=".TaskActivity">
         </activity>
 
@@ -39,16 +40,6 @@
             android:name=".data.TaskProvider"
             android:authorities="com.android.master.mad.todo"
             android:exported="false" />
-
-        <service
-            android:name="com.android.master.mad.todo.sync.TaskAuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
 
     </application>
 

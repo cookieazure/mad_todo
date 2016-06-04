@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.master.mad.todo.sync.IAsyncConnectionResponse;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,7 +21,7 @@ import java.net.URL;
  * Created by Cookie on 28.05.2016.
  * Startup activity showing a simple splash screen and checking connection to web interface.
  */
-public class StartupActivity extends AppCompatActivity implements IAsyncResponse{
+public class StartupActivity extends AppCompatActivity implements IAsyncConnectionResponse {
 
     private final String LOG_TAG = StartupActivity.class.getSimpleName();
     private ProgressDialog connectionDialog;
@@ -65,11 +67,11 @@ public class StartupActivity extends AppCompatActivity implements IAsyncResponse
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    private class WebServiceConnection extends AsyncTask<Void, Void, Boolean> implements IAsyncResponse {
+    private class WebServiceConnection extends AsyncTask<Void, Void, Boolean> implements IAsyncConnectionResponse {
 
-        IAsyncResponse delegate;
+        IAsyncConnectionResponse delegate;
 
-        public WebServiceConnection(IAsyncResponse delegate){
+        public WebServiceConnection(IAsyncConnectionResponse delegate){
             this.delegate = delegate;
         }
         @Override
@@ -96,7 +98,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncResponse
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestProperty("User-Agent", "Android Application");
                 con.setRequestProperty("Connection", "close");
-                con.setConnectTimeout(5000);
+                con.setConnectTimeout(500);
                 con.connect();
 
                 if (con.getResponseCode() == 200) {
