@@ -17,6 +17,8 @@ import com.android.master.mad.todo.data.TaskContract;
  */
 public class TaskAdapter extends CursorAdapter {
 
+    private final String LOG_TAG = TaskAdapter.class.getSimpleName();
+
     public TaskAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -35,10 +37,10 @@ public class TaskAdapter extends CursorAdapter {
         TextView text = (TextView) view.findViewById(R.id.task_item_expiry);
         CheckBox fav = (CheckBox) view.findViewById(R.id.task_item_check_fav);
 
-        done.setChecked(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE) != 0);
+        done.setChecked(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE)) != 0);
         name.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
         text.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
-        fav.setChecked(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV) != 0);
+        fav.setChecked(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
 
     }
 }
