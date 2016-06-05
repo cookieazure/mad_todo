@@ -7,12 +7,21 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ListView;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
+import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
 import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
+import com.android.master.mad.todo.sync.ITaskCrudOperations;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TaskListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -22,22 +31,86 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private TaskAdapter taskAdapter;
     private ListView taskList;
+
     private boolean online;
+    private ITaskCrudOperations webServiceConnector;
+    private TaskSQLiteOperationService sqLiteConnector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, " : onCreate().");
-        setContentView(R.layout.activity_task_list);
         online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
-        //TODO Datenabgleich.
+        setContentView(R.layout.activity_task_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_task_list_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        //TODO remove
         addTestData();
+
+        setupSQLiteConnector();
+        if(online){
+            setupWebServiceConnector();
+            //TODO move to Login Activity.
+            //syncWithWebService();
+        }
 
         taskList = (ListView) findViewById(R.id.task_list);
         taskAdapter = new TaskAdapter(this, null, 0);
         taskList.setAdapter(taskAdapter);
 
         getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
+    }
+
+    private void setupSQLiteConnector(){
+        sqLiteConnector = new TaskSQLiteOperationService(this);
+    }
+
+    private void setupWebServiceConnector(){
+        webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
+    }
+
+    private void syncWithWebService(){
+        Cursor cursor = sqLiteConnector.readAll();
+        if(!cursor.moveToFirst()){
+            Call<List<Task>> call = webServiceConnector.readAll();
+            call.enqueue(new Callback<List<Task>>() {
+                @Override
+                public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
+                    if (response.isSuccessful()) {
+                        Log.i(LOG_TAG, " : Sync complete.");
+                        sqLiteConnector.bulkInsert(response.body());
+                    } else {
+                        Log.i(LOG_TAG, " : Sync not successful.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Task>> call, Throwable t) {
+                    // something went completely south (like no internet connection)
+                    Log.i(LOG_TAG, " - Retrofit error: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        webServiceConnector = null;
+        sqLiteConnector = null;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        setupSQLiteConnector();
+        if(online){
+            setupWebServiceConnector();
+        }
     }
 
 
@@ -60,6 +133,11 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         taskAdapter.swapCursor(null);
     }
 
+
+
+
+
+
     private void addTestData(){
         TaskSQLiteOperationService databaseOperations = new TaskSQLiteOperationService(this);
         Cursor cursor = databaseOperations.readAll();
@@ -80,6 +158,9 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             testItem = new Task("Name 5", "Description");
             returnUri = databaseOperations.insert(testItem);
             Log.d(LOG_TAG, returnUri.toString());
+        } else {
+//            int reutnr = databaseOperations.delete(0);
+
         }
 
     }

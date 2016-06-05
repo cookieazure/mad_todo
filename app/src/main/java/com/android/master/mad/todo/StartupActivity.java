@@ -37,8 +37,12 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         Log.d(LOG_TAG, ": evaluateConnection().");
         if(result){
             Log.i(LOG_TAG, "Web interface available.");
+            //TODO implement Login Activity.
             //Intent intent = new Intent(this,LoginActivity.class);
             //startActivity(intent);
+            Intent intent = new Intent(this, TaskListActivity.class);
+            intent.putExtra(getString(R.string.intent_web_service), true);
+            startActivity(intent);
         } else{
             Log.i(LOG_TAG, "Web interface not available.");
             Toast.makeText(StartupActivity.this, "The web interface is not available. Only local storage is used.", Toast.LENGTH_LONG).show();
@@ -69,6 +73,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
 
     private class WebServiceConnection extends AsyncTask<Void, Void, Boolean> implements IAsyncConnectionResponse {
 
+        private final String LOG_TAG = StartupActivity.class.getSimpleName();
         IAsyncConnectionResponse delegate;
 
         public WebServiceConnection(IAsyncConnectionResponse delegate){
