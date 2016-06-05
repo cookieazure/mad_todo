@@ -9,19 +9,24 @@ import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
 import com.android.master.mad.todo.sync.ITaskSQLiteOperations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Cookie on 04.06.2016.
  */
 public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
 
-    Context context;
+    private final String LOG_TAG = TaskSQLiteOperationService.class.getSimpleName();
+
+    private Context context;
 
     public TaskSQLiteOperationService(Context context){
         this.context = context;
     }
     @Override
-    public Task read(long id) {
-        return null;
+    public Cursor read(long id) {
+        return context.getContentResolver().query(TaskContract.Task.buildTaskUri(id), null, null, null, null);
     }
 
     @Override
@@ -36,13 +41,24 @@ public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
     }
 
     @Override
-    public Task update(long id, Task task) {
-        return null;
+    public int bulkInsert(List<Task> tasks) {
+        ArrayList<ContentValues> bulkValues = new ArrayList<>();
+        for (Task task : tasks) {
+            ContentValues taskValue = generateContentValues(task);
+            bulkValues.add(taskValue);
+        }
+        return context.getContentResolver().bulkInsert(TaskContract.Task.CONTENT_URI, bulkValues.toArray(new ContentValues[bulkValues.size()]));
     }
 
     @Override
-    public Boolean delete(long id) {
-        return null;
+    public int update(long id, Task task) {
+        ContentValues newValues = generateContentValues(task);
+        return context.getContentResolver().update(TaskContract.Task.buildTaskUri(id), newValues, null, null);
+    }
+
+    @Override
+    public int delete(long id) {
+        return context.getContentResolver().delete(TaskContract.Task.buildTaskUri(id), null, null);
     }
 
     private ContentValues generateContentValues(Task task){

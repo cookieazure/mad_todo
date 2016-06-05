@@ -1,5 +1,7 @@
 package com.android.master.mad.todo.helper;
 
+import android.util.Log;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -9,6 +11,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Class for generating Retrofit services using defined interfaces.
  */
 public class RetrofitServiceGenerator {
+
+    private static final String LOG_TAG = RetrofitServiceGenerator.class.getSimpleName();
+
     public static final String API_BASE_URL = "http://10.0.2.2:8080/api/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -19,6 +24,7 @@ public class RetrofitServiceGenerator {
                     .addConverterFactory(GsonConverterFactory.create());
 
     public static <S> S createService(Class<S> serviceClass) {
+        Log.d(LOG_TAG, " : createService().");
         Retrofit retrofit = builder.client(httpClient.build()).build();
         return retrofit.create(serviceClass);
     }
