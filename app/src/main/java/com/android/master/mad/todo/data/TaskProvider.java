@@ -45,7 +45,8 @@ public class TaskProvider extends ContentProvider{
      */
     @Override
     public boolean onCreate() {
-        Log.d(LOG_TAG, ": onCreate()");
+        Log.v(LOG_TAG, ": onCreate()");
+
         dbHelper = new TaskDbHelper(getContext());
         return true;
     }
@@ -60,7 +61,8 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public String getType(Uri uri) {
-        Log.d(LOG_TAG, ": getType()");
+        Log.v(LOG_TAG, ": getType()");
+
         final int match = uriMatcher.match(uri);
         switch (match){
             case TASKS:
@@ -94,8 +96,10 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.d(LOG_TAG, ": query()");
+        Log.v(LOG_TAG, ": query()");
+
         Cursor result;
+
         switch (uriMatcher.match(uri)){
             case TASKS:
                 Log.d(LOG_TAG, ": Query TASKS.");
@@ -144,11 +148,10 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        Log.d(LOG_TAG, ": insert()");
+        Log.v(LOG_TAG, ": insert()");
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
-
         Uri returnUri;
 
         switch (match) {
@@ -179,7 +182,7 @@ public class TaskProvider extends ContentProvider{
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        Log.d(LOG_TAG, ": delete()");
+        Log.v(LOG_TAG, ": delete()");
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
@@ -217,7 +220,7 @@ public class TaskProvider extends ContentProvider{
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        Log.d(LOG_TAG, ": update()");
+        Log.v(LOG_TAG, ": update()");
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
