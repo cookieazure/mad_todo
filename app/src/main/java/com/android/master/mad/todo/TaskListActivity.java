@@ -95,6 +95,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
                 }
             });
         }
+        cursor.close();
     }
 
     @Override
@@ -107,9 +108,9 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onResume(){
         super.onResume();
-        setupSQLiteConnector();
+        if(sqLiteConnector == null) {setupSQLiteConnector();}
         if(online){
-            setupWebServiceConnector();
+            if(webServiceConnector == null) {setupWebServiceConnector();}
         }
     }
 
@@ -162,6 +163,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 //            int reutnr = databaseOperations.delete(0);
 
         }
+        cursor.close();
 
     }
 

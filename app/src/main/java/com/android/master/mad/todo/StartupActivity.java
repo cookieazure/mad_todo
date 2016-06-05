@@ -57,7 +57,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         if(checkConnection()){
             Log.i(LOG_TAG, "Connection is true, check server connection.");
             connectionDialog = new ProgressDialog(this);
-            connectionDialog.setMessage("Checking server connection.");
+            connectionDialog.setMessage(getString(R.string.checking_server_connection));
             connectionDialog.show();
             WebServiceConnection task = new WebServiceConnection(this);
             task.execute();
@@ -88,6 +88,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         protected void onPreExecute(){
             Log.d(LOG_TAG, ": onPreExecute().");
         }
+
         protected void onPostExecute(Boolean result) {
             Log.d(LOG_TAG, ": onPostExecute().");
             connectionDialog.hide();
