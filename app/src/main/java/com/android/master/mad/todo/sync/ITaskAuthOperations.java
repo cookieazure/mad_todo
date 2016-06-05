@@ -2,6 +2,8 @@ package com.android.master.mad.todo.sync;
 
 import com.android.master.mad.todo.data.User;
 
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.PUT;
 
 /**
@@ -10,6 +12,6 @@ import retrofit2.http.PUT;
  */
 public interface ITaskAuthOperations {
 
-    @PUT("auth")
-    public boolean authenticateUser(User user);
+    @PUT("users/auth")
+    Call<Boolean> authenticateUser(@Body User user);
 }
