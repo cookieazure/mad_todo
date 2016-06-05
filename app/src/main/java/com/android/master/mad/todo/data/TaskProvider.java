@@ -24,17 +24,15 @@ public class TaskProvider extends ContentProvider{
     static final int TASKS = 100;
     static final int SINGLE_TASK = 200;
 
-    static UriMatcher buildUriMatcher() {
-        // I know what you're thinking.  Why create a UriMatcher when you can use regular
-        // expressions instead?  Because you're not crazy, that's why.
+    //location.location_setting = ?
+    private static final String idSelection =
+            TaskContract.Task.TABLE_NAME+"." +  TaskContract.Task._ID + " = ? ";
 
-        // All paths added to the UriMatcher have a corresponding code to return when a match is
-        // found.  The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case.
+    static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = TaskContract.CONTENT_AUTHORITY;
 
-        // For each type of URI you want to add, create a corresponding code.
+        // For each type of URI...
         matcher.addURI(authority, TaskContract.PATH_TASKS, TASKS);
         matcher.addURI(authority, TaskContract.PATH_TASKS + "/#", SINGLE_TASK);
         return matcher;
@@ -50,6 +48,28 @@ public class TaskProvider extends ContentProvider{
         Log.d(LOG_TAG, ": onCreate()");
         dbHelper = new TaskDbHelper(getContext());
         return true;
+    }
+
+    /**
+     * Handle requests for the MIME type of the data at the given URI.
+     *
+     * @param uri the URI to query.
+     *
+     * @return a MIME type string, or {@code null} if there is no type.
+     */
+    @Nullable
+    @Override
+    public String getType(Uri uri) {
+        Log.d(LOG_TAG, ": getType()");
+        final int match = uriMatcher.match(uri);
+        switch (match){
+            case TASKS:
+                return TaskContract.Task.CONTENT_TYPE;
+            case SINGLE_TASK:
+                return TaskContract.Task.CONTENT_ITEM_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown URI: "+ uri);
+        }
     }
 
     /**
@@ -79,6 +99,7 @@ public class TaskProvider extends ContentProvider{
         switch (uriMatcher.match(uri)){
             case TASKS:
                 Log.d(LOG_TAG, ": Query TASKS.");
+
                 result = dbHelper.getReadableDatabase().query(
                         TaskContract.Task.TABLE_NAME,
                         projection,
@@ -91,11 +112,12 @@ public class TaskProvider extends ContentProvider{
                 break;
             case SINGLE_TASK:
                 Log.d(LOG_TAG, ": Query SINGLE_TASK.");
+                long id = TaskContract.Task.getTaskIdFromUri(uri);
                 result = dbHelper.getReadableDatabase().query(
                         TaskContract.Task.TABLE_NAME,
                         projection,
-                        selection,
-                        selectionArgs,
+                        idSelection,
+                        new String[]{Long.toString(id)},
                         null,
                         null,
                         sortOrder
@@ -108,27 +130,7 @@ public class TaskProvider extends ContentProvider{
         return result;
     }
 
-    /**
-     * Handle requests for the MIME type of the data at the given URI.
-     *
-     * @param uri the URI to query.
-     *
-     * @return a MIME type string, or {@code null} if there is no type.
-     */
-    @Nullable
-    @Override
-    public String getType(Uri uri) {
-        Log.d(LOG_TAG, ": getType()");
-        final int match = uriMatcher.match(uri);
-        switch (match){
-            case TASKS:
-                return TaskContract.Task.CONTENT_TYPE;
-            case SINGLE_TASK:
-                return TaskContract.Task.CONTENT_ITEM_TYPE;
-            default:
-                throw new UnsupportedOperationException("Unknown URI: "+ uri);
-        }
-    }
+
 
     /**
      * Handle requests to insert a new row.
@@ -185,8 +187,11 @@ public class TaskProvider extends ContentProvider{
 
         switch (match) {
             case SINGLE_TASK:
+                long id = TaskContract.Task.getTaskIdFromUri(uri);
                 rowsDeleted = db.delete(
-                        TaskContract.Task.TABLE_NAME, selection, selectionArgs);
+                        TaskContract.Task.TABLE_NAME,
+                        idSelection,
+                        new String[]{Long.toString(id)});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -220,8 +225,11 @@ public class TaskProvider extends ContentProvider{
 
         switch (match) {
             case SINGLE_TASK:
-                rowsUpdated = db.update(TaskContract.Task.TABLE_NAME, values, selection,
-                        selectionArgs);
+                long id = TaskContract.Task.getTaskIdFromUri(uri);
+                rowsUpdated = db.update(TaskContract.Task.TABLE_NAME,
+                        values,
+                        idSelection,
+                        new String[]{Long.toString(id)});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

@@ -56,8 +56,8 @@ public class TaskContract{
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static String getTaskIdFromUri(Uri uri) {
-            return uri.getPathSegments().get(1);
+        public static long getTaskIdFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
         }
     }
 
