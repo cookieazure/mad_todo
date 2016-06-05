@@ -49,13 +49,13 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //TODO remove
-        addTestData();
+        //addTestData();
 
         setupSQLiteConnector();
         if(online){
             setupWebServiceConnector();
             //TODO move to Login Activity.
-            //syncWithWebService();
+            syncWithWebService();
         }
 
         taskList = (ListView) findViewById(R.id.task_list);
@@ -82,7 +82,17 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
                 public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
                     if (response.isSuccessful()) {
                         Log.i(LOG_TAG, " : Sync complete.");
+                        Log.d(LOG_TAG, " : " + response.body().toString() );
                         sqLiteConnector.bulkInsert(response.body());
+                        //TODO remove
+//                        Cursor cursor = sqLiteConnector.readAll();
+//                        if (cursor.moveToFirst()){
+//                            while (!cursor.isAfterLast()){
+//                                Log.i(LOG_TAG, " : " + cursor.getLong(cursor.getColumnIndex(TaskContract.Task._ID)) + " - " + cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
+//                                cursor.moveToNext();
+//                            }
+//                        }
+//                        cursor.close();
                     } else {
                         Log.i(LOG_TAG, " : Sync not successful.");
                     }

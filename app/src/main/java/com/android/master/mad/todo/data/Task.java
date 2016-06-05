@@ -37,6 +37,7 @@ public class Task {
     }
     // Name constructor
     public Task(String name, String description) {
+        this.id = -1;
         this.name = name;
         this.description = description;
     }
