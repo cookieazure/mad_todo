@@ -24,6 +24,7 @@ import java.net.URL;
 public class StartupActivity extends AppCompatActivity implements IAsyncConnectionResponse {
 
     private final String LOG_TAG = StartupActivity.class.getSimpleName();
+    static final int LOGIN_REQUEST = 1;
     private ProgressDialog connectionDialog;
 
     @Override
@@ -37,12 +38,8 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         Log.d(LOG_TAG, ": evaluateConnection().");
         if(result){
             Log.i(LOG_TAG, "Web interface available.");
-            //TODO implement Login Activity.
-            //Intent intent = new Intent(this,LoginActivity.class);
-            //startActivity(intent);
-            Intent intent = new Intent(this, TaskListActivity.class);
-            intent.putExtra(getString(R.string.intent_web_service), true);
-            startActivity(intent);
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST);
         } else{
             Log.i(LOG_TAG, "Web interface not available.");
             Toast.makeText(StartupActivity.this, "The web interface is not available. Only local storage is used.", Toast.LENGTH_LONG).show();
@@ -116,7 +113,19 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
             }
             return false;
         }
+    }
 
-
+    //TODO
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == LOGIN_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, TaskListActivity.class);
+                intent.putExtra(getString(R.string.intent_web_service), true);
+                startActivity(intent);
+            }
+        }
     }
 }
