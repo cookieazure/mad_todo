@@ -13,7 +13,8 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">The password must be numeric and 6 characters long</string>
-    <string name="error_incorrect_password">The login credentials are incorrect</string>
+    <string name="error_incorrect_credentials">The login credentials are incorrect</string>
+    <string name="error_connection">CONNECTION ERROR</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

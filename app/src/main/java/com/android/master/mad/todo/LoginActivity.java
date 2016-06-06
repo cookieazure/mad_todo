@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.master.mad.todo.data.User;
@@ -66,6 +67,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View progressView;
     private View loginFormView;
     private Button signInButton;
+    private ImageView errorImage;
+    private TextView errorHeader;
+    private TextView errorItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void afterTextChanged(Editable s) {
                 checkLoginButtonState();
+                resetAuthError();
             }
         });
         populateAutoComplete();
@@ -116,6 +121,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void afterTextChanged(Editable s) {
                 checkLoginButtonState();
+                resetAuthError();
             }
         });
 
@@ -130,6 +136,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         loginFormView = findViewById(R.id.login_form);
         progressView = findViewById(R.id.login_progress);
+
+        errorImage = (ImageView) findViewById(R.id.error_image);
+        errorHeader = (TextView) findViewById(R.id.error_header);
+        errorItem = (TextView) findViewById(R.id.error_item);
     }
 
     private void populateAutoComplete() {
@@ -207,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid email address.
+        // Check for a valid email address and password
         if (TextUtils.isEmpty(email)) {
             mailView.setError(getString(R.string.error_field_required));
             focusView = mailView;
@@ -216,10 +226,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mailView.setError(getString(R.string.error_invalid_email));
             focusView = mailView;
             cancel = true;
-        }
-
-        // Check for a valid password, if the user entered one.
-        if (!cancel && !isPasswordValid(password)) {
+        } else if (TextUtils.isEmpty(password)) {
+            passwordView.setError(getString(R.string.error_field_required));
+            focusView = passwordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;
@@ -244,6 +255,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         return password.matches("[0-9]{6}");
+    }
+
+
+    private void showAuthError(){
+        errorImage.setImageResource(R.drawable.ic_error_outline);
+        errorHeader.setText(getString(R.string.error_connection));
+        errorItem.setText(getString(R.string.error_incorrect_credentials));
+    }
+
+    private void resetAuthError(){
+        if(errorImage.getDrawable() != null) {
+            errorImage.setImageDrawable(null);
+            errorHeader.setText(null);
+            errorItem.setText(null);
+        }
     }
 
     /**
@@ -325,7 +351,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mailView.setAdapter(adapter);
     }
 
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -371,7 +396,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
             } else {
-                passwordView.setError(getString(R.string.error_incorrect_password));
+                showAuthError();
                 passwordView.requestFocus();
             }
         }
