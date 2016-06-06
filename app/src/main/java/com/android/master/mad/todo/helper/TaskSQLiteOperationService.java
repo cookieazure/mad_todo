@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Cookie on 04.06.2016.
+ * Class for SQLite database operations for tasks.
  */
 public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
 

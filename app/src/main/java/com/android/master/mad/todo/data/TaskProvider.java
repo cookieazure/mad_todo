@@ -61,7 +61,7 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public String getType(Uri uri) {
-        Log.v(LOG_TAG, ": getType()");
+        Log.v(LOG_TAG, ": getType().");
 
         final int match = uriMatcher.match(uri);
         switch (match){
@@ -96,13 +96,13 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.v(LOG_TAG, ": query()");
+        Log.v(LOG_TAG, ": query().");
 
         Cursor result;
 
         switch (uriMatcher.match(uri)){
             case TASKS:
-                Log.d(LOG_TAG, ": Query TASKS.");
+                Log.v(LOG_TAG, ": Query TASKS.");
 
                 result = dbHelper.getReadableDatabase().query(
                         TaskContract.Task.TABLE_NAME,
@@ -115,7 +115,7 @@ public class TaskProvider extends ContentProvider{
                 );
                 break;
             case SINGLE_TASK:
-                Log.d(LOG_TAG, ": Query SINGLE_TASK.");
+                Log.v(LOG_TAG, ": Query SINGLE_TASK.");
                 long id = TaskContract.Task.getTaskIdFromUri(uri);
                 result = dbHelper.getReadableDatabase().query(
                         TaskContract.Task.TABLE_NAME,
@@ -134,8 +134,6 @@ public class TaskProvider extends ContentProvider{
         return result;
     }
 
-
-
     /**
      * Handle requests to insert a new row.
      *
@@ -148,7 +146,7 @@ public class TaskProvider extends ContentProvider{
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        Log.v(LOG_TAG, ": insert()");
+        Log.v(LOG_TAG, ": insert().");
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
@@ -172,17 +170,56 @@ public class TaskProvider extends ContentProvider{
     }
 
     /**
+     * Handle requests to insert a new row.
+     *
+     * @param uri    The content:// URI of the insertion request. This must not be {@code null}.
+     * @param values A set of column_name/value pairs to add to the database.
+     *               This must not be {@code null}.
+     *
+     * @return The URI for the newly inserted item.
+     */
+    @Nullable
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        Log.v(LOG_TAG, ": bulkInsert().");
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        final int match = uriMatcher.match(uri);
+
+        switch (match) {
+            case TASKS: {
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(TaskContract.Task.TABLE_NAME, null, value);
+                        if (_id != -1){
+                            returnCount++;
+                        }
+                    }
+                } finally {
+                    db.setTransactionSuccessful();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            }
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
+    /**
      * Handle requests to delete one rows.
      *
      * @param uri           The full URI to query, including a row ID (if a specific record is requested).
      * @param selection     An optional restriction to apply to rows when deleting.
-     * @param selectionArgs
+     * @param selectionArgs Arguments for selection.
      *
      * @return The number of rows affected.
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        Log.v(LOG_TAG, ": delete()");
+        Log.v(LOG_TAG, ": delete().");
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = uriMatcher.match(uri);
@@ -214,7 +251,7 @@ public class TaskProvider extends ContentProvider{
      * @param values        A set of column_name/value pairs to update in the database.
      *                      This must not be {@code null}.
      * @param selection     An optional filter to match rows to update.
-     * @param selectionArgs
+     * @param selectionArgs Arguments for selection.
      *
      * @return the number of rows affected.
      */
