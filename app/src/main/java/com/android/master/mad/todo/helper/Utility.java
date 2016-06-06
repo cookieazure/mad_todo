@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class Utility {
 
-    private final String LOG_TAG = Utility.class.getSimpleName();
+    private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public List<Task> createTasksFromCursor(Cursor cursor){
+    public static List<Task> createTasksFromCursor(Cursor cursor){
         Log.v(LOG_TAG, " : createTasksFromCursor");
         ArrayList<Task> tasks = new ArrayList<>();
         Task task;
-
+        cursor.moveToFirst();
         while(!cursor.isAfterLast()){
             task = new Task();
             task.setId(cursor.getLong(cursor.getColumnIndex(TaskContract.Task._ID)));
@@ -32,7 +32,9 @@ public class Utility {
             task.setFavourite(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
             task.setSimpleContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
             tasks.add(task);
+            Log.v(LOG_TAG, " : create Task from cursor: " + task.toString());
             cursor.moveToNext();
+
         }
         return tasks;
     }

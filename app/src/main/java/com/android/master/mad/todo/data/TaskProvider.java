@@ -130,6 +130,7 @@ public class TaskProvider extends ContentProvider{
             default:
                 throw new UnsupportedOperationException("Unknown URI: "+ uri);
         }
+
         result.setNotificationUri(getContext().getContentResolver(), uri);
         return result;
     }
@@ -196,9 +197,11 @@ public class TaskProvider extends ContentProvider{
                         if (_id != -1){
                             returnCount++;
                         }
+                        Log.v(LOG_TAG, ": bulkInsert(). Inserted " + _id );
                     }
-                } finally {
                     db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
                 }
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;

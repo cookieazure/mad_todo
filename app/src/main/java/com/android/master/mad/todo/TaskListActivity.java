@@ -17,12 +17,6 @@ import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
 import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class TaskListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private final String LOG_TAG = TaskListActivity.class.getSimpleName();
@@ -54,8 +48,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         setupSQLiteConnector();
         if(online){
             setupWebServiceConnector();
-            //TODO move to Login Activity.
-            syncWithWebService();
         }
 
         taskList = (ListView) findViewById(R.id.task_list);
@@ -71,41 +63,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private void setupWebServiceConnector(){
         webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
-    }
-
-    private void syncWithWebService(){
-        Cursor cursor = sqLiteConnector.readAll();
-        if(!cursor.moveToFirst()){
-            Call<List<Task>> call = webServiceConnector.readAll();
-            call.enqueue(new Callback<List<Task>>() {
-                @Override
-                public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
-                    if (response.isSuccessful()) {
-                        Log.i(LOG_TAG, " : Sync complete.");
-                        Log.d(LOG_TAG, " : " + response.body().toString() );
-                        sqLiteConnector.bulkInsert(response.body());
-                        //TODO remove
-//                        Cursor cursor = sqLiteConnector.readAll();
-//                        if (cursor.moveToFirst()){
-//                            while (!cursor.isAfterLast()){
-//                                Log.i(LOG_TAG, " : " + cursor.getLong(cursor.getColumnIndex(TaskContract.Task._ID)) + " - " + cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
-//                                cursor.moveToNext();
-//                            }
-//                        }
-//                        cursor.close();
-                    } else {
-                        Log.i(LOG_TAG, " : Sync not successful.");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Task>> call, Throwable t) {
-                    // something went completely south (like no internet connection)
-                    Log.i(LOG_TAG, " - Retrofit error: " + t.getMessage());
-                }
-            });
-        }
-        cursor.close();
     }
 
     @Override

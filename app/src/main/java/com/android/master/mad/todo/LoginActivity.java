@@ -381,7 +381,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 Boolean authResult = call.execute().body();
                 Log.i(LOG_TAG, " : Auth complete (" + authResult +").");
-                return authResult;
+                //TODO temporary authentication = ALL, cahnge back to authResult
+                return true;
             } catch (IOException e){
                 Log.i(LOG_TAG, " : Auth not successful.");
                 return false;
@@ -394,6 +395,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                setResult(RESULT_OK);
                 finish();
             } else {
                 showAuthError();
