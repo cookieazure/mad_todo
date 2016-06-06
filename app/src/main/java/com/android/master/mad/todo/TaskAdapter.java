@@ -10,8 +10,6 @@ import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.android.master.mad.todo.data.TaskContract;
-
 /**
  * Created by misslert on 31.05.2016.
  * CursorAdapter for handling and binding Tasks to the UI.
@@ -24,11 +22,26 @@ public class TaskAdapter extends CursorAdapter {
         super(context, c, flags);
     }
 
+    public static class ViewHolder {
+        public final CheckBox done;
+        public final TextView name;
+        public final TextView date;
+        public final CheckBox fav;
+
+        public ViewHolder(View view) {
+            done = (CheckBox) view.findViewById(R.id.task_item_check_done);
+            name = (TextView) view.findViewById(R.id.task_item_name);
+            date = (TextView) view.findViewById(R.id.task_item_expiry);
+            fav = (CheckBox) view.findViewById(R.id.task_item_check_fav);
+        }
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         Log.v(LOG_TAG, " : newView().");
-
         View view = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
         return view;
     }
 
@@ -36,15 +49,11 @@ public class TaskAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         Log.v(LOG_TAG, " : bindView().");
 
-        CheckBox done = (CheckBox) view.findViewById(R.id.task_item_check_done);
-        TextView name = (TextView) view.findViewById(R.id.task_item_name);
-        TextView text = (TextView) view.findViewById(R.id.task_item_expiry);
-        CheckBox fav = (CheckBox) view.findViewById(R.id.task_item_check_fav);
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        done.setChecked(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE)) != 0);
-        name.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
-        text.setText(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
-        fav.setChecked(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
-
+        viewHolder.done.setChecked(cursor.getInt(TaskListActivity.COL_TASK_DONE) != 0);
+        viewHolder.name.setText(cursor.getString(TaskListActivity.COL_TASK_NAME));
+        viewHolder.date.setText(cursor.getString(TaskListActivity.COL_TASK_DATE));
+        viewHolder.fav.setChecked(cursor.getInt(TaskListActivity.COL_TASK_FAV) != 0);
     }
 }

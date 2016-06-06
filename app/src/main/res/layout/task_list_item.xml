@@ -8,7 +8,7 @@
         android:id="@+id/task_item_check_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/btn_star"
+        android:layout_gravity="center_vertical"
         android:onClick="onClick" />
 
     <LinearLayout
@@ -38,5 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:onClick="onClick" />
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_vertical"
+        android:onClick="onClick"
+        style="?android:attr/starStyle"/>
 </RelativeLayout>

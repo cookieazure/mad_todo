@@ -30,6 +30,27 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private ITaskCrudOperations webServiceConnector;
     private TaskSQLiteOperationService sqLiteConnector;
 
+    // Column names for task list view
+    private static final String[] TASK_COLUMNS = {
+            TaskContract.Task.TABLE_NAME + "." + TaskContract.Task._ID,
+            TaskContract.Task.COLUMN_NAME,
+            TaskContract.Task.COLUMN_DESC,
+            TaskContract.Task.COLUMN_DATE,
+            TaskContract.Task.COLUMN_DONE,
+            TaskContract.Task.COLUMN_FAV,
+            TaskContract.Task.COLUMN_CONTACTS
+    };
+
+    // Indices for TASK_COLUMNS
+    static final int COL_TASK_ID = 0;
+    static final int COL_TASK_NAME = 1;
+    static final int COL_TASK_DESC = 2;
+    static final int COL_TASK_DATE = 3;
+    static final int COL_TASK_DONE = 4;
+    static final int COL_TASK_FAV= 5;
+    static final int COL_TASK_CONTACTS = 6;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
