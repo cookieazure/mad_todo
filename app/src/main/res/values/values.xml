@@ -2,6 +2,7 @@
 <resources>
     <string name="base_url">http://10.0.2.2:8080</string>
     <string name="intent_web_service">WebService</string>
+    <string name="simple_date_format">dd MMM yyyy - kk:mm</string>
 </resources>
 
 
