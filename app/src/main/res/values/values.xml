@@ -4,27 +4,3 @@
     <string name="intent_web_service">WebService</string>
     <string name="simple_date_format">dd MMM yyyy - kk:mm</string>
 </resources>
-
-
-
-<!-- AsyncTask implementation.
-        ITaskCrudOperations client = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
-        Call<Task> call = client.read(1);
-        call.enqueue(new Callback<Task>() {
-            @Override
-            public void onResponse(Call<Task> call, Response<Task> response) {
-                if(response.isSuccessful()){
-                    Log.w(LOG_TAG, ": isSuccessful() = true.");
-                    Log.w(LOG_TAG, response.body().toString());
-                    Toast.makeText(StartupActivity.this, "Result retrieved.", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Task> call, Throwable t) {
-                Log.w(LOG_TAG, ": onFailure().");
-            }
-        });
-
-
--->

@@ -9,13 +9,21 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
 import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
 import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
+import com.android.master.mad.todo.helper.Utility;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TaskListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -25,7 +33,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private TaskAdapter taskAdapter;
     private ListView taskList;
-
+    private int currentPosition = ListView.INVALID_POSITION;
     private boolean online;
     private ITaskCrudOperations webServiceConnector;
     private TaskSQLiteOperationService sqLiteConnector;
@@ -74,9 +82,61 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         taskList = (ListView) findViewById(R.id.task_list);
         taskAdapter = new TaskAdapter(this, null, 0);
         taskList.setAdapter(taskAdapter);
+        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Cursor cursor = (Cursor) taskAdapter.getItem(position);
+            }
+        });
         getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
     }
+
+    public void onItemClickCheckbox(View view){
+        View parent = (View) view.getParent();
+        int cursorPosition = (int)  parent.getTag(R.id.position);
+
+        Task task = Utility.createTaskFromCursorWithPosition(taskAdapter.getCursor(), cursorPosition);
+
+        if(view.getId() == R.id.task_item_check_done){
+            task.setDone( ((CheckBox) view).isChecked() );
+        } else if (view.getId() == R.id.task_item_check_fav){
+            task.setFavourite( ((CheckBox) view).isChecked() );
+        }
+
+        updateTask(task);
+    }
+
+    private void updateTask(Task task){
+        sqLiteConnector.update(task.getId(), task);
+        if(online){
+            Call<Task> call = webServiceConnector.update(task.getId(),task);
+            call.enqueue(new Callback<Task>() {
+                @Override
+                public void onResponse(Call<Task> call, Response<Task> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(LOG_TAG, ": Webservice updated successfully (" + response.body().toString() + ")");
+                    } else {
+                        Log.i(LOG_TAG, ": Error updating webservice, response not successful.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Task> call, Throwable t) {
+                    Log.i(LOG_TAG, ": Error updating webservice - " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    private void insertTask(Task task){
+
+    }
+
+    private void delete(Task task){
+
+    }
+
 
     private void setupSQLiteConnector(){
         sqLiteConnector = new TaskSQLiteOperationService(this);
@@ -85,6 +145,8 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private void setupWebServiceConnector(){
         webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
     }
+
+
 
     @Override
     public void onPause(){
@@ -101,6 +163,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             if(webServiceConnector == null) {setupWebServiceConnector();}
         }
     }
+
 
 
     @Override
@@ -121,9 +184,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
         taskAdapter.swapCursor(null);
     }
-
-
-
 
 
 
@@ -154,5 +214,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         cursor.close();
 
     }
+
 
 }

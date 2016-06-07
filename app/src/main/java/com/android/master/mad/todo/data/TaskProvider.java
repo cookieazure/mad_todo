@@ -212,41 +212,6 @@ public class TaskProvider extends ContentProvider{
     }
 
     /**
-     * Handle requests to delete one rows.
-     *
-     * @param uri           The full URI to query, including a row ID (if a specific record is requested).
-     * @param selection     An optional restriction to apply to rows when deleting.
-     * @param selectionArgs Arguments for selection.
-     *
-     * @return The number of rows affected.
-     */
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        Log.v(LOG_TAG, ": delete().");
-
-        final SQLiteDatabase db = dbHelper.getWritableDatabase();
-        final int match = uriMatcher.match(uri);
-        int rowsDeleted;
-
-        switch (match) {
-            case SINGLE_TASK:
-                long id = TaskContract.Task.getTaskIdFromUri(uri);
-                rowsDeleted = db.delete(
-                        TaskContract.Task.TABLE_NAME,
-                        idSelection,
-                        new String[]{Long.toString(id)});
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
-
-        if (rowsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
-        return rowsDeleted;
-    }
-
-    /**
      * IHandle requests to update one row.
      *
      * @param uri           The URI to query. This can potentially have a record ID if this
@@ -281,5 +246,40 @@ public class TaskProvider extends ContentProvider{
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
+    }
+
+    /**
+     * Handle requests to delete one rows.
+     *
+     * @param uri           The full URI to query, including a row ID (if a specific record is requested).
+     * @param selection     An optional restriction to apply to rows when deleting.
+     * @param selectionArgs Arguments for selection.
+     *
+     * @return The number of rows affected.
+     */
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        Log.v(LOG_TAG, ": delete().");
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        final int match = uriMatcher.match(uri);
+        int rowsDeleted;
+
+        switch (match) {
+            case SINGLE_TASK:
+                long id = TaskContract.Task.getTaskIdFromUri(uri);
+                rowsDeleted = db.delete(
+                        TaskContract.Task.TABLE_NAME,
+                        idSelection,
+                        new String[]{Long.toString(id)});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
     }
 }

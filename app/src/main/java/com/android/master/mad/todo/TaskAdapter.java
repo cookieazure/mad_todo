@@ -47,7 +47,7 @@ public class TaskAdapter extends CursorAdapter {
         Log.v(LOG_TAG, " : newView().");
         View view = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
+        view.setTag(R.id.viewHolder, viewHolder);
         return view;
     }
 
@@ -55,19 +55,20 @@ public class TaskAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         Log.v(LOG_TAG, " : bindView().");
 
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        view.setTag(R.id.position, cursor.getPosition());
+        ViewHolder viewHolder = (ViewHolder) view.getTag(R.id.viewHolder);
 
         viewHolder.done.setChecked(cursor.getInt(TaskListActivity.COL_TASK_DONE) != 0);
         viewHolder.name.setText(cursor.getString(TaskListActivity.COL_TASK_NAME));
         long expiry = cursor.getLong(TaskListActivity.COL_TASK_DATE);
-        if(expiry == 0){
+        if (expiry == 0) {
             viewHolder.date.setText(null);
         } else {
             String date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format)).format(new Date(expiry));
             viewHolder.date.setText(date);
         }
         viewHolder.fav.setChecked(cursor.getInt(TaskListActivity.COL_TASK_FAV) != 0);
-        if(viewHolder.done.isChecked()) {
+        if (viewHolder.done.isChecked()) {
             viewHolder.name.setPaintFlags(viewHolder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
             viewHolder.date.setPaintFlags(viewHolder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
             viewHolder.name.setTextColor(Color.GRAY);
@@ -75,7 +76,7 @@ public class TaskAdapter extends CursorAdapter {
         } else {
             viewHolder.name.setPaintFlags(0);
             viewHolder.date.setPaintFlags(0);
-            if(expiry != 0 && expiry < Calendar.getInstance().getTimeInMillis()){
+            if (expiry != 0 && expiry < Calendar.getInstance().getTimeInMillis()) {
                 viewHolder.name.setTextColor(Color.RED);
                 viewHolder.date.setTextColor(Color.RED);
             } else {
@@ -83,7 +84,7 @@ public class TaskAdapter extends CursorAdapter {
                 viewHolder.date.setTextColor(Color.BLACK);
             }
         }
-
-
     }
+
+
 }
