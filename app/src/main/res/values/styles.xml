@@ -13,6 +13,8 @@
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/primary</item>
         <item name="android:popupTheme">@style/Theme.AppCompat.Light</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="colorControlNormal">@color/accent</item>
     </style>
 
     <!-- Splash screen theme. -->

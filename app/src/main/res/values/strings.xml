@@ -24,6 +24,10 @@
     </string>
 
     <!-- Task List View -->
+    <string name="shared_pref_sort_order">shared_pref_sort_order</string>
+    <string name="menu_sort">Sort Order</string>
+    <string name="menu_sort_item_date">Date / Favourite</string>
+    <string name="menu_sort_item_fav">Favourite / Date </string>
 
     <!-- Task Detail View -->
 </resources>

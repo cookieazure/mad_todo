@@ -1,5 +1,6 @@
 package com.android.master.mad.todo;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -23,6 +26,9 @@ import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
 import com.android.master.mad.todo.helper.Utility;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
 
+import java.util.Calendar;
+import java.util.Random;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,15 +39,20 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private static final int TASK_LOADER = 1;
 
+    // Database & Webservice references
     private boolean online;
     private ITaskCrudOperations webServiceConnector;
     private TaskSQLiteOperationService sqLiteConnector;
 
+    // Sort order variables.
+    private int sortOrder;
+    static final int SORT_DATE_FIRST = 1;
+    static final int SORT_FAV_FIRST = 2;
+
+    // UI references.
     private TaskAdapter taskAdapter;
     private ListView taskList;
     private int currentPosition = ListView.INVALID_POSITION;
-    private FloatingActionButton fab;
-
 
     // Column names for task list view
     private static final String[] TASK_COLUMNS = {
@@ -64,20 +75,25 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     static final int COL_TASK_CONTACTS = 6;
 
 
+    //===========================================
+    // LIFECYCLE METHODS
+    //===========================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, " : onCreate().");
         online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
         setContentView(R.layout.activity_task_list);
+
+        // Read shared preferences for sort order
+        SharedPreferences sharedPreferences = this.getPreferences(this.MODE_PRIVATE);
+        sortOrder = sharedPreferences.getInt(getString(R.string.shared_pref_sort_order), 1);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_task_list_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        //TODO remove
-        //addTestData();
 
         setupSQLiteConnector();
         if(online){
@@ -100,11 +116,41 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "FAB (add) clicked.", Toast.LENGTH_LONG).show();
+                Task task = new Task("New Task" +(new Random()).nextInt(100)+1, "Default description");
+                task.setExpiry(Calendar.getInstance().getTimeInMillis());
+                insertTask(task);
             }
         });
         getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_task_list, menu);
+        return true;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        webServiceConnector = null;
+        sqLiteConnector = null;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(sqLiteConnector == null) {setupSQLiteConnector();}
+        if(online){
+            if(webServiceConnector == null) {setupWebServiceConnector();}
+        }
+    }
+
+    //===========================================
+    // INPUT METHODS
+    //===========================================
     public void onItemClickCheckbox(View view){
         View parent = (View) view.getParent();
         int cursorPosition = (int)  parent.getTag(R.id.position);
@@ -118,6 +164,34 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         }
 
         updateTask(task);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.sort_item_date:
+                setAndSaveSortOrder(SORT_DATE_FIRST);
+                Toast.makeText(getApplicationContext(), "SORT BY DATE clicked.", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.sort_item_fav:
+                setAndSaveSortOrder(SORT_FAV_FIRST);
+                Toast.makeText(getApplicationContext(), "SORT BY FAV clicked.", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //===========================================
+    // DATABASE / WEBSERVICE MODIFICATION METHODS
+    //===========================================
+    private void setupSQLiteConnector(){
+        sqLiteConnector = new TaskSQLiteOperationService(this);
+    }
+
+    private void setupWebServiceConnector(){
+        webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
     }
 
     private void updateTask(Task task){
@@ -143,49 +217,46 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void insertTask(Task task){
-
+        sqLiteConnector.insert(task);
+        Log.i(LOG_TAG, ": inserted new task " + task.toString());
     }
 
     private void delete(Task task){
 
     }
 
-
-    private void setupSQLiteConnector(){
-        sqLiteConnector = new TaskSQLiteOperationService(this);
+    //===========================================
+    // SHARED PREFERENCES METHODS
+    //===========================================
+    private void setAndSaveSortOrder(int newSortOrder){
+        sortOrder = newSortOrder;
+        SharedPreferences sharedPreferences = this.getPreferences(this.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(getString(R.string.shared_pref_sort_order), sortOrder).commit();
+        getSupportLoaderManager().restartLoader(TASK_LOADER, null, this);
     }
 
-    private void setupWebServiceConnector(){
-        webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
-    }
-
-
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        webServiceConnector = null;
-        sqLiteConnector = null;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        if(sqLiteConnector == null) {setupSQLiteConnector();}
-        if(online){
-            if(webServiceConnector == null) {setupWebServiceConnector();}
-        }
-    }
-
-
-
+    //===========================================
+    // LOADER METHODS
+    //===========================================
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         Uri taskUri = TaskContract.Task.CONTENT_URI;
 
+        // Set sort order. Default is null
+        String orderBy = null;
+        if(sortOrder == SORT_DATE_FIRST){
+            orderBy = TaskContract.Task.COLUMN_DONE + " DESC, "
+                    + TaskContract.Task.COLUMN_DATE + " ASC, "
+                    + TaskContract.Task.COLUMN_FAV + " DESC";
+
+        } else if (sortOrder == SORT_FAV_FIRST){
+            orderBy = TaskContract.Task.COLUMN_DONE + " DESC, "
+                    + TaskContract.Task.COLUMN_FAV + " DESC, "
+                    + TaskContract.Task.COLUMN_DATE + " ASC";
+        }
         //TODO initialize sort order
 
-        return new CursorLoader(this, taskUri, null, null, null, null);
+        return new CursorLoader(this, taskUri, null, null, null, orderBy);
     }
 
     @Override
@@ -197,36 +268,5 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
         taskAdapter.swapCursor(null);
     }
-
-
-
-    private void addTestData(){
-        TaskSQLiteOperationService databaseOperations = new TaskSQLiteOperationService(this);
-        Cursor cursor = databaseOperations.readAll();
-        if(!cursor.moveToFirst()){
-            Task testItem;
-            testItem = new Task("Name 1", "Description");
-            Uri returnUri = databaseOperations.insert(testItem);
-            Log.d(LOG_TAG, returnUri.toString());
-            testItem = new Task("Name 2", "Description");
-            returnUri = databaseOperations.insert(testItem);
-            Log.d(LOG_TAG, returnUri.toString());
-            testItem = new Task("Name 3", "Description");
-            returnUri = databaseOperations.insert(testItem);
-            Log.d(LOG_TAG, returnUri.toString());
-            testItem = new Task("Name 4", "Description");
-            returnUri = databaseOperations.insert(testItem);
-            Log.d(LOG_TAG, returnUri.toString());
-            testItem = new Task("Name 5", "Description");
-            returnUri = databaseOperations.insert(testItem);
-            Log.d(LOG_TAG, returnUri.toString());
-        } else {
-//            int reutnr = databaseOperations.delete(0);
-
-        }
-        cursor.close();
-
-    }
-
 
 }

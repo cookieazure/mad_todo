@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Sort order should always be displayed -->
+    <item
+        android:id="@+id/menu_action_sort"
+        android:icon="@drawable/ic_action_sort"
+        android:title="@string/menu_sort"
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/sort_item_date"
+                android:icon="@drawable/ic_action_date"
+                android:title="@string/menu_sort_item_date"/>
+            <item
+                android:id="@+id/sort_item_fav"
+                android:icon="@drawable/ic_action_fav"
+                android:title="@string/menu_sort_item_fav" />
+        </menu>
+    </item>
+
+</menu>

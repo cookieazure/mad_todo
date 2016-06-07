@@ -11,18 +11,14 @@
             android:id="@+id/activity_task_list_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
             android:elevation="4dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            android:theme="@style/Toolbar"/>
 
     </android.support.design.widget.AppBarLayout>
 
     <android.widget.ListView
         android:id="@+id/task_list"
         android:name="com.android.master.mad.test.TaskActivity"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
