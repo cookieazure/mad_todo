@@ -17,17 +17,23 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by misslert on 31.05.2016.
+ * Created by MISSLERT on 31.05.2016.
  * CursorAdapter for handling and binding Tasks to the UI.
  */
 public class TaskAdapter extends CursorAdapter {
 
     private final String LOG_TAG = TaskAdapter.class.getSimpleName();
 
+    //===========================================
+    // CONSTRUCTOR METHODS
+    //===========================================
     public TaskAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
+    //===========================================
+    // VIEW HOLDER
+    //===========================================
     public static class ViewHolder {
         public final CheckBox done;
         public final TextView name;
@@ -42,9 +48,12 @@ public class TaskAdapter extends CursorAdapter {
         }
     }
 
+    //===========================================
+    // LIFECYCLE METHODS
+    //===========================================
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        Log.v(LOG_TAG, " : newView().");
+        Log.v(LOG_TAG, ": newView().");
         View view = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(R.id.viewHolder, viewHolder);
@@ -53,7 +62,7 @@ public class TaskAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        Log.v(LOG_TAG, " : bindView().");
+        Log.v(LOG_TAG, ": bindView().");
 
         view.setTag(R.id.position, cursor.getPosition());
         ViewHolder viewHolder = (ViewHolder) view.getTag(R.id.viewHolder);
@@ -85,6 +94,5 @@ public class TaskAdapter extends CursorAdapter {
             }
         }
     }
-
 
 }

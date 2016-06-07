@@ -71,6 +71,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private TextView errorHeader;
     private TextView errorItem;
 
+    //===========================================
+    // LIFECYCLE METHODS
+    //===========================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +146,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         errorItem = (TextView) findViewById(R.id.error_item);
     }
 
+    //===========================================
+    // AUTOCOMPLETE METHODS
+    //===========================================
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -185,6 +191,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(LoginActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mailView.setAdapter(adapter);
+    }
+
+    private interface ProfileQuery {
+        String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+        };
+
+        int ADDRESS = 0;
+    }
+
+    //===========================================
+    // LOGIN METHODS
+    //===========================================
     private void checkLoginButtonState(){
         Log.i(LOG_TAG, mailView.getText().toString());
         Log.i(LOG_TAG, passwordView.getText().toString());
@@ -258,7 +285,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return password.matches("[0-9]{6}");
     }
 
-
     private void showAuthError(){
         errorImage.setImageResource(R.drawable.ic_error_outline);
         errorHeader.setText(getString(R.string.error_connection));
@@ -309,6 +335,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //===========================================
+    // LOADER METHODS
+    //===========================================
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -343,24 +372,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mailView.setAdapter(adapter);
-    }
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-    }
-
+    //===========================================
+    // ASYNC AUTHENTICATION
+    //===========================================
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.

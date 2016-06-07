@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by Cookie on 29.05.2016.#
+ * Created by MISSLERT on 29.05.2016.#
  * Defines table and column name for the SQLite database.
  */
 public class TaskContract{

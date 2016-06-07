@@ -8,7 +8,7 @@ import android.util.Log;
 import com.android.master.mad.todo.data.TaskContract.Task;
 
 /**
- * Created by Cookie on 29.05.2016.
+ * Created by MISSLERT on 29.05.2016.
  * Database helper class.
  */
 public class TaskDbHelper extends SQLiteOpenHelper {

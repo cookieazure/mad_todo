@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 /**
- * Created by misslert on 31.05.2016.
+ * Created by MISSLERT on 31.05.2016.
  * Basic class for task items.
  */
 public class Task {

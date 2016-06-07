@@ -33,6 +33,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by MISSLERT on 28.05.2016.
+ * List activity for displaying, creation and quick editing task details.
+ */
 public class TaskListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private final String LOG_TAG = TaskListActivity.class.getSimpleName();
@@ -81,7 +85,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, " : onCreate().");
+        Log.v(LOG_TAG, ": onCreate().");
         online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
         setContentView(R.layout.activity_task_list);
 
@@ -128,6 +132,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
+        Log.v(LOG_TAG, ": onCreateOptionsMenu().");
         getMenuInflater().inflate(R.menu.menu_task_list, menu);
         return true;
     }
@@ -135,6 +140,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onPause(){
         super.onPause();
+        Log.v(LOG_TAG, ": onPause().");
         webServiceConnector = null;
         sqLiteConnector = null;
     }
@@ -142,6 +148,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onResume(){
         super.onResume();
+        Log.v(LOG_TAG, ": onResume().");
         if(sqLiteConnector == null) {setupSQLiteConnector();}
         if(online){
             if(webServiceConnector == null) {setupWebServiceConnector();}
@@ -152,6 +159,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     // INPUT METHODS
     //===========================================
     public void onItemClickCheckbox(View view){
+        Log.v(LOG_TAG, ": onItemClickCheckbox().");
         View parent = (View) view.getParent();
         int cursorPosition = (int)  parent.getTag(R.id.position);
 
@@ -168,6 +176,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(LOG_TAG, ": onOptionsItemSelected().");
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.sort_item_date:
@@ -195,14 +204,16 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void updateTask(Task task){
+        Log.v(LOG_TAG, ": updateTask().");
         sqLiteConnector.update(task.getId(), task);
+        Log.i(LOG_TAG, ": updated task " + task.toString());
         if(online){
             Call<Task> call = webServiceConnector.update(task.getId(),task);
             call.enqueue(new Callback<Task>() {
                 @Override
                 public void onResponse(Call<Task> call, Response<Task> response) {
                     if (response.isSuccessful()) {
-                        Log.d(LOG_TAG, ": Webservice updated successfully (" + response.body().toString() + ")");
+                        Log.d(LOG_TAG, ": Webservice updated task successfully (" + response.body().toString() + ")");
                     } else {
                         Log.i(LOG_TAG, ": Error updating webservice, response not successful.");
                     }
@@ -217,18 +228,58 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void insertTask(Task task){
+        Log.v(LOG_TAG, ": insertTask().");
         sqLiteConnector.insert(task);
         Log.i(LOG_TAG, ": inserted new task " + task.toString());
+        if(online){
+            Call<Task> call = webServiceConnector.insert(task);
+            call.enqueue(new Callback<Task>() {
+                @Override
+                public void onResponse(Call<Task> call, Response<Task> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(LOG_TAG, ": Webservice inserted task successfully (" + response.body().toString() + ")");
+                    } else {
+                        Log.i(LOG_TAG, ": Error inserting into webservice, response not successful.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Task> call, Throwable t) {
+                    Log.i(LOG_TAG, ": Error inserting into webservice - " + t.getMessage());
+                }
+            });
+        }
     }
 
-    private void delete(Task task){
+    private void deleteTask(Task task){
+        Log.v(LOG_TAG, ": deleteTask().");
+        sqLiteConnector.delete(task.getId());
+        Log.i(LOG_TAG, ": deleted task " + task.toString());
+        if(online){
+            Call<Boolean> call = webServiceConnector.delete(task.getId());
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(LOG_TAG, ": Webservice deleted task successfully (" + response.body().toString() + ")");
+                    } else {
+                        Log.i(LOG_TAG, ": Error deleting in webservice, response not successful.");
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    Log.i(LOG_TAG, ": Error deleting in webservice - " + t.getMessage());
+                }
+            });
+        }
     }
 
     //===========================================
     // SHARED PREFERENCES METHODS
     //===========================================
     private void setAndSaveSortOrder(int newSortOrder){
+        Log.v(LOG_TAG, ": setAndSaveSortOrder().");
         sortOrder = newSortOrder;
         SharedPreferences sharedPreferences = this.getPreferences(this.MODE_PRIVATE);
         sharedPreferences.edit().putInt(getString(R.string.shared_pref_sort_order), sortOrder).commit();
@@ -240,6 +291,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     //===========================================
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        Log.v(LOG_TAG, ": onCreateLoader().");
         Uri taskUri = TaskContract.Task.CONTENT_URI;
 
         // Set sort order. Default is null
@@ -254,18 +306,19 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
                     + TaskContract.Task.COLUMN_FAV + " DESC, "
                     + TaskContract.Task.COLUMN_DATE + " ASC";
         }
-        //TODO initialize sort order
 
         return new CursorLoader(this, taskUri, null, null, null, orderBy);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.v(LOG_TAG, ": onLoadFinished().");
         taskAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Log.v(LOG_TAG, ": onLoaderReset().");
         taskAdapter.swapCursor(null);
     }
 

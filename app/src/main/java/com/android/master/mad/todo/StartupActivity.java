@@ -30,22 +30,43 @@ import java.util.List;
 import retrofit2.Call;
 
 /**
- * Created by Cookie on 28.05.2016.
+ * Created by MISSLERT on 28.05.2016.
  * Startup activity showing a simple splash screen and checking connection to web interface.
  */
 public class StartupActivity extends AppCompatActivity implements IAsyncConnectionResponse, IAsyncSyncResponse {
 
     private final String LOG_TAG = StartupActivity.class.getSimpleName();
+
     static final int LOGIN_REQUEST = 1;
+
+    // UI references
     private ProgressDialog connectionDialog;
 
+    //===========================================
+    // LIFECYCLE METHODS
+    //===========================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(LOG_TAG, "Splash screen initialized.");
+        Log.v(LOG_TAG, ": onCreate().");
         checkWebInterfaceAvailability();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(LOG_TAG, ": onActivityResult().");
+        // Check which request we're responding to
+        if (requestCode == LOGIN_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                syncWithWebService();
+            }
+        }
+    }
+
+    //===========================================
+    // CONNECTION METHODS
+    //===========================================
     public void evaluateConnection(boolean result){
         Log.v(LOG_TAG, ": evaluateConnection().");
         if(result){
@@ -91,20 +112,22 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
+    //===========================================
+    // ASYNC WEBSERVICE CONNECTION
+    //===========================================
     private class WebServiceConnection extends AsyncTask<Void, Void, Boolean> implements IAsyncConnectionResponse {
 
         private final String LOG_TAG = WebServiceConnection.class.getSimpleName();
+
+        // DELEGATE
         IAsyncConnectionResponse delegate;
 
+        // CONSTRUCTOR
         public WebServiceConnection(IAsyncConnectionResponse delegate){
             this.delegate = delegate;
         }
-        @Override
-        public void evaluateConnection(boolean result) {
-            Log.v(LOG_TAG, ": evaluateConnection().");
-            delegate.evaluateConnection(result);
-        }
 
+        // LIFECYCLE METHODS
         protected void onPreExecute(){
             Log.v(LOG_TAG, ": onPreExecute().");
         }
@@ -136,23 +159,31 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
             }
             return false;
         }
+
+        // INTERFACE METHODS
+        @Override
+        public void evaluateConnection(boolean result) {
+            Log.v(LOG_TAG, ": evaluateConnection().");
+            delegate.evaluateConnection(result);
+        }
     }
 
+    //===========================================
+    // ASYNC WEBSERVICE SYNCHRONISATION
+    //===========================================
     private class WebServiceSynchronisation extends AsyncTask<Void, Void, Boolean> implements IAsyncSyncResponse {
 
         private final String LOG_TAG = WebServiceSynchronisation.class.getSimpleName();
+
+        // DELEGATE
         IAsyncSyncResponse delegate;
 
+        // CONSTRUCTOR
         public WebServiceSynchronisation(IAsyncSyncResponse delegate){
             this.delegate = delegate;
         }
 
-        @Override
-        public void onSyncResult(boolean result) {
-            Log.v(LOG_TAG, ": onSyncResult().");
-            delegate.onSyncResult(result);
-        }
-
+        // LIFECYCLE METHODS
         protected void onPreExecute(){
             Log.v(LOG_TAG, ": onPreExecute().");
         }
@@ -215,23 +246,18 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
 
             return true;
         }
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(LOG_TAG, " : onActivityResult().");
-        // Check which request we're responding to
-        if (requestCode == LOGIN_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                syncWithWebService();
-            }
+        // INTERFACE METHODS
+        @Override
+        public void onSyncResult(boolean result) {
+            Log.v(LOG_TAG, ": onSyncResult().");
+            delegate.onSyncResult(result);
         }
     }
 
-    @Override
+        @Override
     public void onSyncResult(boolean result) {
-        Log.v(LOG_TAG, " : onSyncResult().");
+        Log.v(LOG_TAG, ": onSyncResult().");
         // Check sync result
         if (result) {
             Intent intent = new Intent(this, TaskListActivity.class);
@@ -241,7 +267,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
     }
 
     private void syncWithWebService(){
-        Log.v(LOG_TAG, " : syncWithWebService().");
+        Log.v(LOG_TAG, ": syncWithWebService().");
         connectionDialog = new ProgressDialog(this);
         connectionDialog.setMessage(getString(R.string.syncing_with_server));
         connectionDialog.show();

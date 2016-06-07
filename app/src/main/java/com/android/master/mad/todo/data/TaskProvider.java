@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
- * Created by Cookie on 29.05.2016.
+ * Created by MISSLERT on 29.05.2016.
  * Content provider for tasks.
  */
 public class TaskProvider extends ContentProvider{

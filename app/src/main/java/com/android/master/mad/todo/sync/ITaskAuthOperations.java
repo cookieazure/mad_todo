@@ -7,7 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.PUT;
 
 /**
- * Created by Cookie on 04.06.2016.
+ * Created by MISSLERT on 04.06.2016.
  * Interface for authentication operations on web service.
  */
 public interface ITaskAuthOperations {

@@ -3,7 +3,7 @@ package com.android.master.mad.todo.data;
 import java.io.Serializable;
 
 /**
- * Created by misslert on 31.05.2016.
+ * Created by MISSLERT on 31.05.2016.
  * Basic class for storing geolocations.
  */
 public class SimpleLocation implements Serializable {

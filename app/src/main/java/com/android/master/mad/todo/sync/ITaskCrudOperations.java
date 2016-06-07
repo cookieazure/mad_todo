@@ -13,7 +13,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
- * Created by misslert on 02.06.2016.
+ * Created by MISSLERT on 02.06.2016.
  * Interface for CRUD operations on web service.
  */
 public interface ITaskCrudOperations {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Cookie on 29.05.2016.
+ * Created by MISSLERT on 29.05.2016.
  * Basic utility class.
  */
 public class Utility {

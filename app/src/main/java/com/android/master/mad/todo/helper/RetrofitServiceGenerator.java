@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Cookie on 04.06.2016.
+ * Created by MISSLERT on 04.06.2016.
  * Class for generating Retrofit services using defined interfaces.
  */
 public class RetrofitServiceGenerator {
