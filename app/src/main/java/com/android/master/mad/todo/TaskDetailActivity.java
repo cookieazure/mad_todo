@@ -55,8 +55,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void deliverNewActivity(){
-        detailedTask.setName("New Task" +(new Random()).nextInt(100)+1);
-        detailedTask.setDescription("Default description");
+        if (detailedTask.getName() == null) {
+            detailedTask.setName("New Task" + (new Random()).nextInt(100) + 1);
+            detailedTask.setDescription("Default description");
+        }
         detailedTask.setExpiry(Calendar.getInstance().getTimeInMillis());
         Intent returnIntent = new Intent(this, TaskDetailActivity.class);
         returnIntent.putExtra(getString(R.string.intent_task), detailedTask);

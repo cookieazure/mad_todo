@@ -113,6 +113,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(), "List item clicked (id " + position +")", Toast.LENGTH_LONG).show();
                 Cursor cursor = (Cursor) taskAdapter.getItem(position);
+                editTaskUsingDetailView(Utility.createTaskFromCursorWithPosition(cursor, position));
             }
         });
 
@@ -219,6 +220,14 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         Intent intent = new Intent(this, TaskDetailActivity.class);
         intent.putExtra(getString(R.string.intent_task), task);
         startActivityForResult(intent, REQUEST_NEW_TASK);
+    }
+
+    public void editTaskUsingDetailView(Task task){
+        Log.v(LOG_TAG, ": edit task " + task.toString());
+        Log.v(LOG_TAG, ": editTaskUsingDetailView().");
+        Intent intent = new Intent(this, TaskDetailActivity.class);
+        intent.putExtra(getString(R.string.intent_task), task);
+        startActivityForResult(intent, REQUEST_UPDATE_TASK);
     }
 
     //===========================================
