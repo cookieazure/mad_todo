@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Task List</string>
 
-        <!-- Task Splash Screen-->
+    <!-- Task Splash Screen-->
     <string name="checking_server_connection">Checking server connection...</string>
     <string name="syncing_with_server">Syncing data with web server...</string>
     <string name="message_title_webservice_unavailable">The web interface is not available.</string>
     <string name="message_webservice_unavailable">Only local storage is used.</string>
     <string name="button_confirm">Confirm</string>
 
-        <!-- Strings related to login -->
+    <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
