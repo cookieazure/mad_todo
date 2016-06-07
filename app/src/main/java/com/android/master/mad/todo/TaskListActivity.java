@@ -1,5 +1,6 @@
 package com.android.master.mad.todo;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,9 +27,6 @@ import com.android.master.mad.todo.helper.TaskSQLiteOperationService;
 import com.android.master.mad.todo.helper.Utility;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
 
-import java.util.Calendar;
-import java.util.Random;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +40,9 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private final String LOG_TAG = TaskListActivity.class.getSimpleName();
 
     private static final int TASK_LOADER = 1;
+    static final int REQUEST_NEW_TASK = 1;
+    static final int REQUEST_UPDATE_TASK = 2;
+    static final int RESULT_DELETE = 3;
 
     // Database & Webservice references
     private boolean online;
@@ -119,10 +120,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "FAB (add) clicked.", Toast.LENGTH_LONG).show();
-                Task task = new Task("New Task" +(new Random()).nextInt(100)+1, "Default description");
-                task.setExpiry(Calendar.getInstance().getTimeInMillis());
-                insertTask(task);
+                createNewTaskUsingDetailView();
             }
         });
         getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
@@ -142,16 +140,39 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         super.onPause();
         Log.v(LOG_TAG, ": onPause().");
         webServiceConnector = null;
-        sqLiteConnector = null;
     }
 
     @Override
     public void onResume(){
         super.onResume();
         Log.v(LOG_TAG, ": onResume().");
-        if(sqLiteConnector == null) {setupSQLiteConnector();}
         if(online){
             if(webServiceConnector == null) {setupWebServiceConnector();}
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(LOG_TAG, ": onActivityResult().");
+        // Check which request we're responding to
+        if (requestCode == REQUEST_NEW_TASK) {
+            // Make sure request was successful
+            // Otherwise user navigated back or pressed delete (no update needed)
+            if (resultCode == RESULT_OK) {
+                //Task task = (Task) data.getParcelableExtra(getString(R.string.intent_task));
+                Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                insertTask(task);
+            }
+        } else if (requestCode == REQUEST_UPDATE_TASK){
+            // Make sure request was successful or resulted in delete
+            // Otherwise user navigated back (no update needed)
+            if (resultCode == RESULT_OK) {
+                Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                updateTask(task);
+            } else if (resultCode == RESULT_DELETE) {
+                Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                deleteTask(task);
+            }
         }
     }
 
@@ -190,6 +211,14 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void createNewTaskUsingDetailView(){
+        Log.v(LOG_TAG, ": createNewTaskUsingDetailView().");
+        Task task = new Task();
+        Intent intent = new Intent(this, TaskDetailActivity.class);
+        intent.putExtra(getString(R.string.intent_task), task);
+        startActivityForResult(intent, REQUEST_NEW_TASK);
     }
 
     //===========================================

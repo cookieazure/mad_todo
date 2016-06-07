@@ -1,5 +1,8 @@
 package com.android.master.mad.todo.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.ArrayList;
  * Created by MISSLERT on 31.05.2016.
  * Basic class for task items.
  */
-public class Task {
+public class Task implements Parcelable {
 
     // Data fields for task.
     @SerializedName("id")
@@ -34,6 +37,7 @@ public class Task {
 
     // Default constructor
     public Task() {
+        this.id = -1;
     }
     // Name constructor
     public Task(String name, String description) {
@@ -142,4 +146,44 @@ public class Task {
     private void updateSimpleContacts(){
         this.simpleContacts = this.contacts.toArray().toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeLong(this.expiry);
+        dest.writeByte(this.done ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.favourite ? (byte) 1 : (byte) 0);
+        dest.writeString(this.simpleContacts);
+        dest.writeStringList(this.contacts);
+    }
+
+    protected Task(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.expiry = in.readLong();
+        this.done = in.readByte() != 0;
+        this.favourite = in.readByte() != 0;
+        this.simpleContacts = in.readString();
+        this.contacts = in.createStringArrayList();
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel source) {
+            return new Task(source);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 }

@@ -70,6 +70,7 @@ public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
     }
 
     private ContentValues generateContentValues(Task task){
+        Log.v(LOG_TAG, ": generateContentValues().");
         ContentValues values = new ContentValues();
         values.put(TaskContract.Task.COLUMN_NAME, task.getName());
         values.put(TaskContract.Task.COLUMN_DESC, task.getDescription());

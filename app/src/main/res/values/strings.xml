@@ -30,4 +30,6 @@
     <string name="menu_sort_item_fav">Favourite / Date </string>
 
     <!-- Task Detail View -->
+    <string name="menu_delete">Delete Task</string>
+
 </resources>
