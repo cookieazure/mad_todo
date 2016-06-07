@@ -3,6 +3,7 @@ package com.android.master.mad.todo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
@@ -31,12 +33,15 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private static final int TASK_LOADER = 1;
 
-    private TaskAdapter taskAdapter;
-    private ListView taskList;
-    private int currentPosition = ListView.INVALID_POSITION;
     private boolean online;
     private ITaskCrudOperations webServiceConnector;
     private TaskSQLiteOperationService sqLiteConnector;
+
+    private TaskAdapter taskAdapter;
+    private ListView taskList;
+    private int currentPosition = ListView.INVALID_POSITION;
+    private FloatingActionButton fab;
+
 
     // Column names for task list view
     private static final String[] TASK_COLUMNS = {
@@ -85,8 +90,16 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Toast.makeText(getApplicationContext(), "List item clicked (id " + position +")", Toast.LENGTH_LONG).show();
                 Cursor cursor = (Cursor) taskAdapter.getItem(position);
+            }
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_task_list_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "FAB (add) clicked.", Toast.LENGTH_LONG).show();
             }
         });
         getSupportLoaderManager().initLoader(TASK_LOADER, null, this);
