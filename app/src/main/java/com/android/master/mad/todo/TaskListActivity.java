@@ -172,6 +172,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
                 updateTask(task);
             } else if (resultCode == RESULT_DELETE) {
                 Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                Log.v(LOG_TAG, ": delete task " + task.toString());
                 deleteTask(task);
             }
         }
@@ -223,7 +224,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     public void editTaskUsingDetailView(Task task){
-        Log.v(LOG_TAG, ": edit task " + task.toString());
         Log.v(LOG_TAG, ": editTaskUsingDetailView().");
         Intent intent = new Intent(this, TaskDetailActivity.class);
         intent.putExtra(getString(R.string.intent_task), task);

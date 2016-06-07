@@ -7,6 +7,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -48,22 +49,19 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "FAB (save) clicked.", Toast.LENGTH_LONG).show();
-                deliverNewActivity();
+                deliverTaskSave();
             }
         });
 
     }
 
-    private void deliverNewActivity(){
-        if (detailedTask.getName() == null) {
-            detailedTask.setName("New Task" + (new Random()).nextInt(100) + 1);
-            detailedTask.setDescription("Default description");
-        }
-        detailedTask.setExpiry(Calendar.getInstance().getTimeInMillis());
-        Intent returnIntent = new Intent(this, TaskDetailActivity.class);
-        returnIntent.putExtra(getString(R.string.intent_task), detailedTask);
-        setResult(RESULT_OK, returnIntent);
-        finish();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        Log.v(LOG_TAG, ": onCreateOptionsMenu().");
+        getMenuInflater().inflate(R.menu.menu_task_detail, menu);
+        return true;
     }
 
     //===========================================
@@ -76,7 +74,36 @@ public class TaskDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.menu_action_delete:
+                Toast.makeText(getApplicationContext(), "DELETE TASK", Toast.LENGTH_LONG).show();
+                deliverTaskDelete();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    //===========================================
+    // RESULT METHODS
+    //===========================================
+    private void deliverTaskSave(){
+        if (detailedTask.getName() == null) {
+            detailedTask.setName("New Task" + (new Random()).nextInt(100) + 1);
+            detailedTask.setDescription("Default description");
+        }
+        detailedTask.setExpiry(Calendar.getInstance().getTimeInMillis());
+        Intent returnIntent = new Intent(this, TaskDetailActivity.class);
+        returnIntent.putExtra(getString(R.string.intent_task), detailedTask);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+    }
+
+    private void deliverTaskDelete(){
+        Intent returnIntent = new Intent(this, TaskDetailActivity.class);
+        returnIntent.putExtra(getString(R.string.intent_task), detailedTask);
+        setResult(TaskListActivity.RESULT_DELETE, returnIntent);
+        finish();
+    }
+
 }
