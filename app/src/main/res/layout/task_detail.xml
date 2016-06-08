@@ -16,6 +16,8 @@
 
     <EditText
         android:id="@+id/task_detail_name"
+        android:inputType="textMultiLine"
+        android:scrollHorizontally="false"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:background="@android:color/transparent"

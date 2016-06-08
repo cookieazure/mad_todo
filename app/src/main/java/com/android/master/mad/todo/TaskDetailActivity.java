@@ -18,9 +18,6 @@ import android.widget.Toast;
 
 import com.android.master.mad.todo.data.Task;
 
-import java.util.Calendar;
-import java.util.Random;
-
 /**
  * Created by MISSLERT on 07.06.2016.
  * Detail activity for displaying and editing task details.
@@ -120,11 +117,9 @@ public class TaskDetailActivity extends AppCompatActivity {
     // RESULT METHODS
     //===========================================
     private void deliverTaskSave(){
-        if (detailedTask.getName() == null) {
-            detailedTask.setName("New Task" + (new Random()).nextInt(100) + 1);
-            detailedTask.setDescription("Default description");
-        }
-        detailedTask.setExpiry(Calendar.getInstance().getTimeInMillis());
+        detailedTask.setDone(checkDone.isChecked());
+        detailedTask.setName(editName.getText().toString());
+        detailedTask.setFavourite(checkFav.isChecked());
         Intent returnIntent = new Intent(this, TaskDetailActivity.class);
         returnIntent.putExtra(getString(R.string.intent_task), detailedTask);
         setResult(RESULT_OK, returnIntent);
