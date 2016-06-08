@@ -150,6 +150,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // AUTOCOMPLETE METHODS
     //===========================================
     private void populateAutoComplete() {
+        Log.v(LOG_TAG, " : populateAutoComplete().");
         if (!mayRequestContacts()) {
             return;
         }
@@ -157,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean mayRequestContacts() {
+        Log.v(LOG_TAG, " : mayRequestContacts().");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -184,6 +186,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        Log.v(LOG_TAG, " : onRequestPermissionsResult().");
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
@@ -192,6 +195,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        Log.v(LOG_TAG, " : addEmailsToAutoComplete().");
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
@@ -213,8 +217,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // LOGIN METHODS
     //===========================================
     private void checkLoginButtonState(){
-        Log.i(LOG_TAG, mailView.getText().toString());
-        Log.i(LOG_TAG, passwordView.getText().toString());
         if(mailView.getText().toString().isEmpty() ||  passwordView.getText().toString().isEmpty()){
             if(signInButton.isEnabled()){
                 signInButton.setEnabled(false);
@@ -230,6 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        Log.v(LOG_TAG, " : attemptLogin().");
         if (authTask != null) {
             return;
         }
@@ -278,20 +281,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
+        Log.v(LOG_TAG, " : isEmailValid().");
         return email.matches("[A-z0-9._%+-]+@[A-z0-9.-]*\\.[A-z]{2,}");
     }
 
     private boolean isPasswordValid(String password) {
+        Log.v(LOG_TAG, " : isPasswordValid().");
         return password.matches("[0-9]{6}");
     }
 
     private void showAuthError(){
+        Log.v(LOG_TAG, " : showAuthError().");
         errorImage.setImageResource(R.drawable.ic_error_outline);
         errorHeader.setText(getString(R.string.error_connection));
         errorItem.setText(getString(R.string.error_incorrect_credentials));
     }
 
     private void resetAuthError(){
+        Log.v(LOG_TAG, " : resetAuthError().");
         if(errorImage.getDrawable() != null) {
             errorImage.setImageDrawable(null);
             errorHeader.setText(null);
@@ -304,6 +311,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
+        Log.v(LOG_TAG, " : showProgress().");
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -340,6 +348,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     //===========================================
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.v(LOG_TAG, " : onCreateLoader().");
         return new CursorLoader(this,
                 // Retrieve data rows for the device user's 'profile' contact.
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
@@ -357,6 +366,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        Log.v(LOG_TAG, " : onLoadFinished().");
         List<String> emails = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -369,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
+        Log.v(LOG_TAG, " : onLoaderReset().");
     }
 
     //===========================================
@@ -390,13 +400,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            Log.v(LOG_TAG, " : doInBackground().");
             ITaskAuthOperations webServiceAuthenticator = RetrofitServiceGenerator.createService(ITaskAuthOperations.class);
             Call<Boolean> call = webServiceAuthenticator.authenticateUser(user);
             try {
                 Boolean authResult = call.execute().body();
                 Log.i(LOG_TAG, " : Auth complete (" + authResult +").");
-                //TODO temporary authentication = ALL, cahnge back to authResult
-                return true;
+                return authResult;
             } catch (IOException e){
                 Log.i(LOG_TAG, " : Auth not successful.");
                 return false;
@@ -405,6 +415,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            Log.v(LOG_TAG, " : onPostExecute().");
             authTask = null;
             showProgress(false);
 
@@ -419,6 +430,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onCancelled() {
+            Log.v(LOG_TAG, " : onCancelled().");
             authTask = null;
             showProgress(false);
         }

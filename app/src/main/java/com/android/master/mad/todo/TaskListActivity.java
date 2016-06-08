@@ -137,22 +137,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-        Log.v(LOG_TAG, ": onPause().");
-        webServiceConnector = null;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.v(LOG_TAG, ": onResume().");
-        if(online){
-            if(webServiceConnector == null) {setupWebServiceConnector();}
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(LOG_TAG, ": onActivityResult().");
         // Check which request we're responding to
@@ -160,8 +144,8 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             // Make sure request was successful
             // Otherwise user navigated back or pressed delete (no update needed)
             if (resultCode == RESULT_OK) {
-                //Task task = (Task) data.getParcelableExtra(getString(R.string.intent_task));
                 Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                Log.v(LOG_TAG, ": insert task " + task.toString());
                 insertTask(task);
             }
         } else if (requestCode == REQUEST_UPDATE_TASK){
@@ -169,6 +153,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             // Otherwise user navigated back (no update needed)
             if (resultCode == RESULT_OK) {
                 Task task = data.getParcelableExtra(getString(R.string.intent_task));
+                Log.v(LOG_TAG, ": update task " + task.toString());
                 updateTask(task);
             } else if (resultCode == RESULT_DELETE) {
                 Task task = data.getParcelableExtra(getString(R.string.intent_task));
