@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.master.mad.todo.data.Task;
@@ -28,6 +30,10 @@ public class TaskDetailActivity extends AppCompatActivity {
     private final String LOG_TAG = TaskDetailActivity.class.getSimpleName();
 
     private Task detailedTask;
+
+    private CheckBox checkDone;
+    private EditText editName;
+    private CheckBox checkFav;
 
     //===========================================
     // LIFECYCLE METHODS
@@ -46,6 +52,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         detailedTask = getIntent().getParcelableExtra(getString(R.string.intent_task));
         Log.i(LOG_TAG, detailedTask.toString());
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_task_detail_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +62,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
 
+        checkDone = (CheckBox) findViewById(R.id.task_detail_check_done);
+        checkDone.setChecked(detailedTask.isDone());
+        editName = (EditText) findViewById(R.id.task_detail_name);
+        editName.setText(detailedTask.getName());
+        checkFav = (CheckBox) findViewById(R.id.task_detail_check_fav);
+        checkFav.setChecked(detailedTask.isFavourite());
     }
 
     @Override
