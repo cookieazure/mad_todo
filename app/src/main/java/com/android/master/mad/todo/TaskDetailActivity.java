@@ -1,9 +1,11 @@
 package com.android.master.mad.todo;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -75,8 +77,25 @@ public class TaskDetailActivity extends AppCompatActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.menu_action_delete:
-                Toast.makeText(getApplicationContext(), "DELETE TASK", Toast.LENGTH_LONG).show();
-                deliverTaskDelete();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle(R.string.message_delete_header);
+                builder.setMessage(R.string.message_delete_task);
+                builder.setPositiveButton(R.string.button_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deliverTaskDelete();
+                    }
+                });
+                builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
