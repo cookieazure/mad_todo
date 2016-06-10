@@ -252,8 +252,10 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private void insertTask(Task task){
         Log.v(LOG_TAG, ": insertTask().");
-        sqLiteConnector.insert(task);
+        Uri taskUri = sqLiteConnector.insert(task);
         Log.i(LOG_TAG, ": inserted new task " + task.toString());
+        // Update task to reflect assigned SQLite ID before inserting into webservice
+        task.setId(TaskContract.Task.getTaskIdFromUri(taskUri));
         if(online){
             Call<Task> call = webServiceConnector.insert(task);
             call.enqueue(new Callback<Task>() {

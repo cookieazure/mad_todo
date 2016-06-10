@@ -34,7 +34,10 @@
     <!-- Task Detail View -->
     <string name="menu_delete">Delete Task</string>
     <string name="message_delete_header">Delete Current Task</string>
-    <string name="message_delete_task">Do you really want to permanently delete this task?</string>
+    <string name="message_delete_task">Permanently delete this task?</string>
     <string name="button_cancel">Cancel</string>
-
+    <string name="hint_name">Task Name</string>
+    <string name="hint_date">No Date</string>
+    <string name="hint_time">No Time</string>
+    <string name="hint_description">Description</string>
 </resources>
