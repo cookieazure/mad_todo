@@ -25,7 +25,9 @@ import android.widget.TimePicker;
 
 import com.android.master.mad.todo.data.Task;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by MISSLERT on 07.06.2016.
@@ -109,11 +111,11 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
                 resetDateAndTime();
             }
         });
-        currentDateTime = Calendar.getInstance();
+
         if(detailedTask.getExpiry() <= 0) {
             buttonReset.setVisibility(View.INVISIBLE);
         } else {
-
+            currentDateTime = Calendar.getInstance();
             currentDateTime.setTimeInMillis(detailedTask.getExpiry());
             Log.i(LOG_TAG, ": " + currentDateTime.get(Calendar.MONTH));
             setDateDisplay();
@@ -172,6 +174,7 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
 
     private void resetDateAndTime(){
         Log.v(LOG_TAG, ": resetDateAndTime().");
+        currentDateTime = null;
         editDate.setText(null);
         editTime.setText(null);
         buttonReset.setVisibility(View.INVISIBLE);
@@ -200,7 +203,8 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Log.v(LOG_TAG, ": onDateSet().");
         buttonReset.setVisibility(View.VISIBLE);
-        currentDateTime.set(year, monthOfYear, dayOfMonth);
+        if(currentDateTime == null) currentDateTime = Calendar.getInstance();
+        currentDateTime.set(year, monthOfYear, dayOfMonth, 0, 0);
         setDateDisplay();
     }
 
@@ -216,7 +220,8 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Log.v(LOG_TAG, ": onTimeSet().");
         buttonReset.setVisibility(View.VISIBLE);
-        if(editDate.getText() == null){
+        if(currentDateTime == null){
+            currentDateTime = Calendar.getInstance();
             Calendar c = Calendar.getInstance();
             currentDateTime.set(c.get(Calendar.YEAR),c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), hourOfDay, minute );
             setDateDisplay();
@@ -227,26 +232,25 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void setDateDisplay(){
-        editDate.setText(currentDateTime.get(Calendar.DAY_OF_MONTH) + "." + (currentDateTime.get(Calendar.MONTH)+1) + "." + currentDateTime.get(Calendar.YEAR));
+        editDate.setText( new SimpleDateFormat(getString(R.string.simple_date_format)).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     private void setTimeDisplay(){
-        editTime.setText(currentDateTime.get(Calendar.HOUR_OF_DAY) + ":" + currentDateTime.get(Calendar.MINUTE));
+        editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format)).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     //===========================================
     // RESULT METHODS
     //===========================================
     private void deliverTaskSave(){
+        Log.v(LOG_TAG, ": deliverTaskSave().");
         detailedTask.setDone(checkDone.isChecked());
         detailedTask.setName(editName.getText().toString());
         detailedTask.setFavourite(checkFav.isChecked());
-        // TODO
-        if (editDate.getText() == null || editDate.getText().equals("")) {
-            Log.i(LOG_TAG, ": getText is null");
+        if (currentDateTime == null) {
+            Log.v(LOG_TAG, ": currentDateTime is null.");
             detailedTask.setExpiry(0);
         } else {
-            Log.i(LOG_TAG, ": getText is not null");
             detailedTask.setExpiry(currentDateTime.getTimeInMillis());
         }
         detailedTask.setDescription(editDescription.getText().toString());

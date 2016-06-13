@@ -73,7 +73,14 @@ public class TaskAdapter extends CursorAdapter {
         if (expiry == 0) {
             viewHolder.date.setText(null);
         } else {
-            String date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format)).format(new Date(expiry));
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(expiry);
+            String date;
+            if(cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0){
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format)).format(new Date(expiry));
+            } else {
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_datetime_format)).format(new Date(expiry));
+            }
             viewHolder.date.setText(date);
         }
         viewHolder.fav.setChecked(cursor.getInt(TaskListActivity.COL_TASK_FAV) != 0);

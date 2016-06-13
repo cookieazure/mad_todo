@@ -3,5 +3,7 @@
     <string name="base_url">http://10.0.2.2:8080</string>
     <string name="intent_web_service">WebService</string>
     <string name="intent_task">Task</string>
-    <string name="simple_date_format">dd MMM yyyy - kk:mm</string>
+    <string name="simple_datetime_format">dd MMM yyyy - kk:mm</string>
+    <string name="simple_date_format">dd MMM yyyy</string>
+    <string name="simple_time_format">kk:mm</string>
 </resources>
