@@ -17,13 +17,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/activity_task_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <include layout="@layout/task_detail" />
-    </FrameLayout>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/activity_task_detail_fab"

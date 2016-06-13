@@ -40,4 +40,5 @@
     <string name="hint_date">No Date</string>
     <string name="hint_time">No Time</string>
     <string name="hint_description">Description</string>
+    <string name="header_contacts">Associated contacts</string>
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/grid_margin"
+    android:descendantFocusability="blocksDescendants"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/contact_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="Vorname Nachname" />
+
+    <ImageButton
+        android:id="@+id/contact_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/contact_item_mail"
+        android:layout_gravity="center_vertical"
+        android:onClick="onItemClickContact"
+        android:background="@drawable/ic_action_sms"/>
+
+    <ImageButton
+        android:id="@+id/contact_item_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/contact_item_space"
+        android:layout_gravity="center_vertical"
+        android:onClick="onItemClickContact"
+        android:background="@drawable/ic_action_mail"/>
+
+    <Space
+        android:id="@+id/contact_item_space"
+        android:layout_toLeftOf="@+id/contact_item_delete"
+        android:layout_width="16dp"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/contact_item_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+
+        android:layout_gravity="center_vertical"
+        android:onClick="onItemClickContact"
+        android:background="@drawable/ic_action_cancel"/>
+</RelativeLayout>
