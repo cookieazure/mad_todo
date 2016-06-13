@@ -39,20 +39,6 @@ public class Utility {
         return tasks;
     }
 
-    public static Task createTaskFromCurrentCursorPosition(Cursor cursor){
-        Log.v(LOG_TAG, " : createTaskFromCurrentCursorPosition().");
-        Task task = new Task();
-        task.setId(cursor.getLong(cursor.getColumnIndex(TaskContract.Task._ID)));
-        task.setName(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_NAME)));
-        task.setDescription(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_DESC)));
-        task.setExpiry(cursor.getLong(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
-        task.setDone(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE)) != 0);
-        task.setFavourite(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
-        task.setSimpleContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
-        Log.v(LOG_TAG, " : create single task from cursor: " + task.toString());
-        return task;
-    }
-
     public static Task createTaskFromCursorWithPosition(Cursor cursor, int position){
         Log.v(LOG_TAG, " : createTaskFromCursorWithPosition().");
         Task task = new Task();

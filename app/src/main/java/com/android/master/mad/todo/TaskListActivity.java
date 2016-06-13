@@ -56,8 +56,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     // UI references.
     private TaskAdapter taskAdapter;
-    private ListView taskList;
-    private int currentPosition = ListView.INVALID_POSITION;
+    // private int currentPosition = ListView.INVALID_POSITION;
 
     // Column names for task list view
     private static final String[] TASK_COLUMNS = {
@@ -71,13 +70,13 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     };
 
     // Indices for TASK_COLUMNS
-    static final int COL_TASK_ID = 0;
+    //static final int COL_TASK_ID = 0;
     static final int COL_TASK_NAME = 1;
-    static final int COL_TASK_DESC = 2;
+    //static final int COL_TASK_DESC = 2;
     static final int COL_TASK_DATE = 3;
     static final int COL_TASK_DONE = 4;
     static final int COL_TASK_FAV= 5;
-    static final int COL_TASK_CONTACTS = 6;
+    //static final int COL_TASK_CONTACTS = 6;
 
 
     //===========================================
@@ -91,7 +90,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_task_list);
 
         // Read shared preferences for sort order
-        SharedPreferences sharedPreferences = this.getPreferences(this.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
         sortOrder = sharedPreferences.getInt(getString(R.string.shared_pref_sort_order), 1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_task_list_toolbar);
@@ -105,7 +104,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
             setupWebServiceConnector();
         }
 
-        taskList = (ListView) findViewById(R.id.task_list);
+        ListView taskList = (ListView) findViewById(R.id.task_list);
         taskAdapter = new TaskAdapter(this, null, 0);
         taskList.setAdapter(taskAdapter);
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -306,8 +305,8 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private void setAndSaveSortOrder(int newSortOrder){
         Log.v(LOG_TAG, ": setAndSaveSortOrder().");
         sortOrder = newSortOrder;
-        SharedPreferences sharedPreferences = this.getPreferences(this.MODE_PRIVATE);
-        sharedPreferences.edit().putInt(getString(R.string.shared_pref_sort_order), sortOrder).commit();
+        SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
+        sharedPreferences.edit().putInt(getString(R.string.shared_pref_sort_order), sortOrder).apply();
         getSupportLoaderManager().restartLoader(TASK_LOADER, null, this);
     }
 
