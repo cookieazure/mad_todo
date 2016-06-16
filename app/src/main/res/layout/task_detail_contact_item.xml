@@ -10,26 +10,19 @@
         android:id="@+id/contact_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="Vorname Nachname" />
 
-    <ImageButton
-        android:id="@+id/contact_item_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/contact_item_mail"
-        android:layout_gravity="center_vertical"
-        android:onClick="onItemClickContact"
-        android:background="@drawable/ic_action_sms"/>
 
     <ImageButton
-        android:id="@+id/contact_item_mail"
+        android:id="@+id/contact_item_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/contact_item_space"
         android:layout_gravity="center_vertical"
         android:onClick="onItemClickContact"
-        android:background="@drawable/ic_action_mail"/>
+        android:background="@drawable/ic_action_share"/>
 
     <Space
         android:id="@+id/contact_item_space"

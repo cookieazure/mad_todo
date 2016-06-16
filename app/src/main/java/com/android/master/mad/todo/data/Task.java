@@ -38,18 +38,21 @@ public class Task implements Parcelable {
     // Default constructor
     public Task() {
         this.id = -1;
+        this.contacts = new ArrayList<>();
     }
     // Name constructor
     public Task(String name, String description) {
         this.id = -1;
         this.name = name;
         this.description = description;
+        this.contacts = new ArrayList<>();
     }
     // ID constructor
     public Task(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.contacts = new ArrayList<>();
     }
 
     public boolean equals(Object other) {

@@ -2,6 +2,7 @@ package com.android.master.mad.todo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.Manifest.permission.READ_CONTACTS;
+
 /**
  * Created by MISSLERT on 28.05.2016.
  * List activity for displaying, creation and quick editing task details.
@@ -43,6 +46,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     static final int REQUEST_NEW_TASK = 1;
     static final int REQUEST_UPDATE_TASK = 2;
     static final int RESULT_DELETE = 3;
+    private static final int REQUEST_READ_CONTACTS = 4;
 
     // Database & Webservice references
     private boolean online;
@@ -78,7 +82,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     static final int COL_TASK_FAV= 5;
     //static final int COL_TASK_CONTACTS = 6;
 
-
     //===========================================
     // LIFECYCLE METHODS
     //===========================================
@@ -99,6 +102,10 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        if (checkSelfPermission(READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+
         setupSQLiteConnector();
         if(online){
             setupWebServiceConnector();
@@ -110,7 +117,6 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "List item clicked (id " + position +")", Toast.LENGTH_LONG).show();
                 Cursor cursor = (Cursor) taskAdapter.getItem(position);
                 editTaskUsingDetailView(Utility.createTaskFromCursorWithPosition(cursor, position));
             }
@@ -188,11 +194,9 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         switch (item.getItemId()) {
             case R.id.sort_item_date:
                 setAndSaveSortOrder(SORT_DATE_FIRST);
-                Toast.makeText(getApplicationContext(), "SORT BY DATE clicked.", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.sort_item_fav:
                 setAndSaveSortOrder(SORT_FAV_FIRST);
-                Toast.makeText(getApplicationContext(), "SORT BY FAV clicked.", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

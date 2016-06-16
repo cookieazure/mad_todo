@@ -1,124 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:nestedScrollingEnabled="true">
+
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/grid_margin"
+        android:layout_marginBottom="@dimen/grid_margin"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        android:background="@color/background"
+        android:columnCount="4"
+        android:rowCount="6"
+        android:alignmentMode="alignBounds">
+
+        <CheckBox
+            android:id="@+id/task_detail_check_done"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:id="@+id/task_detail_name"
+            android:hint="@string/hint_name"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="@dimen/grid_margin"
+            android:layout_marginRight="@dimen/grid_margin"
+            android:layout_columnSpan="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal|center_vertical"/>
+
+        <CheckBox
+            android:id="@+id/task_detail_check_fav"
+            style="?android:attr/starStyle"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_horizontal"/>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
             android:layout_marginTop="@dimen/grid_margin"
             android:layout_marginBottom="@dimen/grid_margin"
-            android:layout_columnWeight="1"
-            android:background="@color/background"
-            android:columnCount="4"
-            android:rowCount="6"
-            android:alignmentMode="alignBounds">
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill_horizontal"/>
 
-            <CheckBox
-                android:id="@+id/task_detail_check_done"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
+        <ImageView
+            android:id="@+id/task_detail_icon_time"
+            android:src="@drawable/ic_action_clock"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
-            <EditText
-                android:id="@+id/task_detail_name"
-                android:hint="@string/hint_name"
-                android:inputType="textMultiLine"
-                android:scrollbars="vertical"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:background="@android:color/transparent"
-                android:layout_marginLeft="@dimen/grid_margin"
-                android:layout_marginRight="@dimen/grid_margin"
-                android:layout_columnSpan="2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="fill_horizontal|center_vertical"/>
+        <EditText
+            android:id="@+id/task_detail_date"
+            android:hint="@string/hint_date"
+            android:inputType="text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"/>
 
-            <CheckBox
-                android:id="@+id/task_detail_check_fav"
-                style="?android:attr/starStyle"
-                android:layout_height="wrap_content"
-                android:layout_gravity="clip_horizontal"/>
+        <EditText
+            android:id="@+id/task_detail_time"
+            android:hint="@string/hint_time"
+            android:inputType="text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/primary_light"
-        android:layout_marginTop="@dimen/grid_margin"
-        android:layout_marginBottom="@dimen/grid_margin"
-        android:layout_marginStart="@dimen/grid_margin"
-        android:layout_columnSpan="4"
-        android:layout_gravity="fill_horizontal"/>
+        <ImageButton
+            android:id="@+id/task_detail_button_clear"
+            android:background="@drawable/ic_action_cancel"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_horizontal|center_vertical"/>
 
-            <ImageView
-                android:id="@+id/task_detail_icon_time"
-                android:src="@drawable/ic_action_clock"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-            <EditText
-                android:id="@+id/task_detail_date"
-                android:hint="@string/hint_date"
-                android:inputType="text"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_marginStart="@dimen/grid_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"/>
-
-            <EditText
-                android:id="@+id/task_detail_time"
-                android:hint="@string/hint_time"
-                android:inputType="text"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_marginStart="@dimen/grid_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"/>
-
-            <ImageButton
-                android:id="@+id/task_detail_button_clear"
-                android:background="@drawable/ic_action_cancel"
-                android:layout_height="wrap_content"
-                android:layout_gravity="clip_horizontal|center_vertical"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/primary_light"
-        android:layout_marginTop="@dimen/grid_margin"
-        android:layout_marginBottom="@dimen/grid_margin"
-        android:layout_marginStart="@dimen/grid_margin"
-        android:layout_columnSpan="4"
-        android:layout_gravity="fill_horizontal"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
+            android:layout_marginTop="@dimen/grid_margin"
+            android:layout_marginBottom="@dimen/grid_margin"
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill_horizontal"/>
 
 
-            <ImageView
-                android:id="@+id/task_detail_icon_description"
-                android:src="@drawable/ic_action_description"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
+        <ImageView
+            android:id="@+id/task_detail_icon_description"
+            android:src="@drawable/ic_action_description"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
 
-            <EditText
-                android:id="@+id/task_detail_description"
-                android:hint="@string/hint_description"
-                android:inputType="textMultiLine"
-                android:scrollbars="vertical"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:background="@android:color/transparent"
-                android:layout_marginLeft="@dimen/grid_margin"
-                android:layout_marginRight="@dimen/grid_margin"
-                android:layout_columnSpan="3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="fill_horizontal|center_vertical"
-                tools:text="Task Description" />
+        <EditText
+            android:id="@+id/task_detail_description"
+            android:hint="@string/hint_description"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="@dimen/grid_margin"
+            android:layout_marginRight="@dimen/grid_margin"
+            android:layout_columnSpan="3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal|center_vertical"
+            tools:text="Task Description" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/primary_light"
-        android:layout_marginTop="@dimen/grid_margin"
-        android:layout_marginBottom="@dimen/grid_margin"
-        android:layout_marginStart="@dimen/grid_margin"
-        android:layout_columnSpan="4"
-        android:layout_gravity="fill_horizontal"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
+            android:layout_marginTop="@dimen/grid_margin"
+            android:layout_marginBottom="@dimen/grid_margin"
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill_horizontal"/>
 
         <ImageView
             android:id="@+id/task_detail_icon_contacts"
@@ -143,27 +150,34 @@
             android:layout_height="wrap_content"
             android:layout_gravity="clip_horizontal"/>
 
-    <android.widget.ListView
-        android:id="@+id/contact_list"
-        android:name="com.android.master.mad.test.TaskActivity"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/grid_margin"
-        android:paddingStart="@dimen/grid_margin"
-        android:layout_columnSpan="4"
-        android:layout_gravity="fill_horizontal"
-        tools:context=".TaskListActivity"
-        tools:listitem="@layout/task_detail_contact_item"/>
+        <android.widget.ListView
+            android:id="@+id/contact_list"
+            android:name="com.android.master.mad.test.TaskActivity"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:nestedScrollingEnabled="true"
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill_horizontal"
+            android:padding="@dimen/grid_margin"
+            tools:context=".TaskListActivity"
+            tools:listitem="@layout/task_detail_contact_item"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/primary_light"
-        android:layout_marginTop="@dimen/grid_margin"
-        android:layout_marginBottom="@dimen/grid_margin"
-        android:layout_marginStart="@dimen/grid_margin"
-        android:layout_columnSpan="4"
-        android:layout_gravity="fill_horizontal"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light"
+            android:layout_marginTop="@dimen/grid_margin"
+            android:layout_marginBottom="@dimen/grid_margin"
+            android:layout_marginStart="@dimen/grid_margin"
+            android:layout_columnSpan="4"
+            android:layout_gravity="fill_horizontal"/>
 
-</GridLayout>
+    </GridLayout>
+
+</ScrollView>
+
+
+
+
+
