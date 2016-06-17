@@ -263,6 +263,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
             Intent intent = new Intent(this, TaskListActivity.class);
             intent.putExtra(getString(R.string.intent_web_service), true);
             startActivity(intent);
+            finish();
         }
     }
 

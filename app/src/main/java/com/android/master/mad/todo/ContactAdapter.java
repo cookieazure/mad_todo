@@ -2,20 +2,14 @@ package com.android.master.mad.todo;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by MISSLERT on 14.06.2016.
@@ -65,10 +59,10 @@ public class ContactAdapter extends CursorAdapter{
 
         view.setTag(R.id.position, cursor.getPosition());
         view.setTag(R.id.contact_id, cursor.getLong(TaskDetailActivity.COL_CONTACT_ID));
+        view.setTag(R.id.lookup, cursor.getString(TaskDetailActivity.COL_CONTACT_LOOKUP));
 
         ViewHolder viewHolder = (ViewHolder) view.getTag(R.id.viewHolder);
-        viewHolder.name.setText(cursor.getString(TaskDetailActivity.COL_CONTACT_NAME));
-
+        viewHolder.name.setText(cursor.getString(TaskDetailActivity.COL_CONTACT_NAME_PRIM));
     }
 
 }

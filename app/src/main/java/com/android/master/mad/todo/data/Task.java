@@ -2,10 +2,13 @@ package com.android.master.mad.todo.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by MISSLERT on 31.05.2016.
@@ -38,21 +41,18 @@ public class Task implements Parcelable {
     // Default constructor
     public Task() {
         this.id = -1;
-        this.contacts = new ArrayList<>();
     }
     // Name constructor
     public Task(String name, String description) {
         this.id = -1;
         this.name = name;
         this.description = description;
-        this.contacts = new ArrayList<>();
     }
     // ID constructor
     public Task(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.contacts = new ArrayList<>();
     }
 
     public boolean equals(Object other) {
@@ -117,6 +117,7 @@ public class Task implements Parcelable {
 
     public void setSimpleContacts(String simpleContacts) {
         this.simpleContacts = simpleContacts;
+        updateContacts();
     }
 
     public ArrayList<String> getContacts() {
@@ -129,6 +130,7 @@ public class Task implements Parcelable {
     }
 
     public void addContact(String contact){
+        if(contacts == null) contacts = new ArrayList<>();
         contacts.add(contact);
         updateSimpleContacts();
     }
@@ -147,7 +149,27 @@ public class Task implements Parcelable {
 //    }
 
     private void updateSimpleContacts(){
-        this.simpleContacts = this.contacts.toArray().toString();
+        if(contacts == null){
+            this.simpleContacts = null;
+        } else {
+            this.simpleContacts = this.contacts.toString().substring(1, this.contacts.toString().length()-1 );
+        }
+    }
+
+    private void updateContacts(){
+        if(simpleContacts == null){
+            this.contacts = null;
+        } else {
+            String[] converter = this.simpleContacts.split(", ");
+            this.contacts = new ArrayList<>();
+            for (String item: converter) {
+                this.contacts.add(item);
+            }
+        }
+    }
+
+    public boolean hasContacts(){
+        return contacts != null;
     }
 
     @Override

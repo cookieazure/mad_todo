@@ -326,13 +326,13 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         String orderBy = null;
         if(sortOrder == SORT_DATE_FIRST){
             orderBy = TaskContract.Task.COLUMN_DONE + " DESC, "
-                    + TaskContract.Task.COLUMN_DATE + " ASC, "
+                    + TaskContract.Task.COLUMN_DATE + " DESC, "
                     + TaskContract.Task.COLUMN_FAV + " DESC";
 
         } else if (sortOrder == SORT_FAV_FIRST){
             orderBy = TaskContract.Task.COLUMN_DONE + " DESC, "
                     + TaskContract.Task.COLUMN_FAV + " DESC, "
-                    + TaskContract.Task.COLUMN_DATE + " ASC";
+                    + TaskContract.Task.COLUMN_DATE + " DESC";
         }
 
         return new CursorLoader(this, taskUri, null, null, null, orderBy);

@@ -8,6 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Data;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +24,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +74,9 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
 
     static final int COL_CONTACT_ID = 0;
     static final int COL_CONTACT_LOOKUP = 1;
-    static final int COL_CONTACT_NAME = 2;
+    static final int COL_CONTACT_NAME_PRIM = 2;
+
+    private static final int REQUEST_PICK_CONTACT= 7;
 
     //===========================================
     // LIFECYCLE METHODS
@@ -86,19 +94,6 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
 
         detailedTask = getIntent().getParcelableExtra(getString(R.string.intent_task));
         Log.d(LOG_TAG, detailedTask.toString());
-        detailedTask.addContact("1");
-        detailedTask.addContact("5");
-        detailedTask.addContact("17");
-        detailedTask.addContact("22");
-        detailedTask.addContact("35");
-        detailedTask.addContact("55");
-        detailedTask.addContact("72");
-        detailedTask.addContact("83");
-        detailedTask.addContact("91");
-        detailedTask.addContact("102");
-        detailedTask.addContact("115");
-        detailedTask.addContact("127");
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_task_detail_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +167,9 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         contactAdapter = new ContactAdapter(this, null, 0);
         contactList.setAdapter(contactAdapter);
 
-        getSupportLoaderManager().initLoader(CONTACT_LOADER, null, this);
+        if(detailedTask.hasContacts()){
+            getSupportLoaderManager().initLoader(CONTACT_LOADER, null, this);
+        }
 
         supportFragmentManager = getSupportFragmentManager();
     }
@@ -184,6 +181,46 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         Log.v(LOG_TAG, ": onCreateOptionsMenu().");
         getMenuInflater().inflate(R.menu.menu_task_detail, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+        Log.v(LOG_TAG, ": onCreateContextMenu().");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_contact, menu);
+
+        View parent = (View) view.getParent();
+        long contactId = (long)  parent.getTag(R.id.contact_id);
+        String lookup = (String)  parent.getTag(R.id.lookup);
+
+        Uri contactUri = Contacts.getLookupUri(contactId, lookup);
+
+        Intent showContactIntent = new Intent(Intent.ACTION_VIEW, contactUri);
+        menu.findItem(R.id.contact_show).setIntent(showContactIntent);
+
+        String contactPhone = isContactCallable(contactId);
+        if(contactPhone == null){
+            menu.findItem(R.id.contact_text).setVisible(false);
+        } else {
+            updateDetailedTask();
+            Intent textContactIntent = new Intent(Intent.ACTION_SENDTO);
+            textContactIntent.setData(Uri.parse("smsto:"+contactPhone));
+            textContactIntent.putExtra("sms_body", detailedTask.getName() + ": " + detailedTask.getDescription());
+            menu.findItem(R.id.contact_text).setIntent(textContactIntent);
+        }
+        String contactMail = isContactMailable(contactId);
+        if(contactMail == null){
+            menu.findItem(R.id.contact_mail).setVisible(false);
+        } else {
+            updateDetailedTask();
+            Intent mailContactIntent = new Intent(Intent.ACTION_SEND);
+            mailContactIntent.setType("*/*");
+            mailContactIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(contactMail)} );
+            mailContactIntent.putExtra(Intent.EXTRA_SUBJECT, detailedTask.getName());
+            mailContactIntent.putExtra(Intent.EXTRA_TEXT, detailedTask.getDescription());
+            menu.findItem(R.id.contact_mail).setIntent(mailContactIntent);
+        }
     }
 
     //===========================================
@@ -224,16 +261,15 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     public void onItemClickContact(View view){
         Log.v(LOG_TAG, ": onItemClickContact().");
 
-        // TODO respond to buttons share / delete
-        // TODO optional: open contact quick view
         View parent = (View) view.getParent();
-        int cursorPosition = (int)  parent.getTag(R.id.position);
         long cursorId = (long)  parent.getTag(R.id.contact_id);
 
         if(view.getId() == R.id.contact_item_share){
-            Toast.makeText(getApplicationContext(), "onItemClickContact- SHARE for position " + cursorPosition, Toast.LENGTH_SHORT).show();
+            registerForContextMenu(view);
+            openContextMenu(view);
         } else if (view.getId() == R.id.contact_item_delete){
-            Toast.makeText(getApplicationContext(), "onItemClickContact- DELETE for position " + cursorPosition + " with ID " + cursorId, Toast.LENGTH_SHORT).show();
+            detailedTask.removeContact(String.valueOf(cursorId));
+            getSupportLoaderManager().restartLoader(CONTACT_LOADER, null, this);
         }
 
     }
@@ -263,8 +299,8 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
 
     private void callContactPicker(){
         Log.v(LOG_TAG, ": callContactPicker().");
-        // TODO
-        Toast.makeText(getApplicationContext(), "callContactPicker().", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);
+        startActivityForResult(intent, REQUEST_PICK_CONTACT);
     }
 
     private void setDateDisplay(){
@@ -275,11 +311,62 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format)).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
-    //===========================================
-    // RESULT METHODS
-    //===========================================
-    private void deliverTaskSave(){
-        Log.v(LOG_TAG, ": deliverTaskSave().");
+    private String isContactCallable(long contactId){
+        String contactPhone = null;
+
+        Uri contactUri = Phone.CONTENT_URI;
+        // Define projection
+        String[] projection = new String[] {
+                Contacts._ID,
+                Contacts.LOOKUP_KEY,
+                Contacts.Data.MIMETYPE,
+                Contacts.Data.DATA1,
+                Contacts.Data.DATA2
+        };
+        // Define selection and set selection arguments
+        String selection = Data.CONTACT_ID + " = ? AND "
+                + Data.MIMETYPE + " = ? AND "
+                + Data.DATA2 + " = ?";
+        String[] selectionArgs = {String.valueOf(contactId), Phone.CONTENT_ITEM_TYPE, String.valueOf(Phone.TYPE_MOBILE)};
+        Cursor cursor = getContentResolver()
+                .query(contactUri, projection, selection, selectionArgs, null);
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            contactPhone = cursor.getString(cursor.getColumnIndex(Contacts.Data.DATA1));
+        }
+        cursor.close();
+        return contactPhone;
+    }
+
+    private String isContactMailable(long contactId){
+        String contactMail = null;
+
+        Uri contactUri = Email.CONTENT_URI;
+        // Define projection
+        String[] projection = new String[] {
+                Contacts._ID,
+                Contacts.LOOKUP_KEY,
+                Contacts.Data.MIMETYPE,
+                Contacts.Data.DATA1
+        };
+        // Define selection and set selection arguments
+        String selection = Data.CONTACT_ID + " = ? AND "
+                            + Data.MIMETYPE + " = ?";
+        String[] selectionArgs = {String.valueOf(contactId), Email.CONTENT_ITEM_TYPE};
+        Cursor cursor = getContentResolver()
+                .query(contactUri, projection, selection, selectionArgs, null);
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            contactMail = cursor.getString(cursor.getColumnIndex(Contacts.Data.DATA1));
+        }
+        cursor.close();
+        return contactMail;
+    }
+
+    private void updateDetailedTask(){
+        Log.v(LOG_TAG, ": updateDetailedTask().");
         detailedTask.setDone(checkDone.isChecked());
         detailedTask.setName(editName.getText().toString());
         detailedTask.setFavourite(checkFav.isChecked());
@@ -290,7 +377,15 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             detailedTask.setExpiry(currentDateTime.getTimeInMillis());
         }
         detailedTask.setDescription(editDescription.getText().toString());
-        // TODO Contacts
+        // contacts are updated on the fly, no further changes necessary.
+    }
+
+    //===========================================
+    // RESULT METHODS
+    //===========================================
+    private void deliverTaskSave(){
+        Log.v(LOG_TAG, ": deliverTaskSave().");
+        updateDetailedTask();
         Intent returnIntent = new Intent(this, TaskDetailActivity.class);
         returnIntent.putExtra(getString(R.string.intent_task), detailedTask);
         setResult(RESULT_OK, returnIntent);
@@ -343,10 +438,26 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         setTimeDisplay();
     }
 
-    private void onContactAdded(){
-        Log.v(LOG_TAG, ": onContactAdded().");
-        // TODO
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(LOG_TAG, ": onActivityResult().");
+        // Check which request we're responding to
+        if (requestCode == REQUEST_PICK_CONTACT) {
+            // Make sure request was successful
+            if (resultCode == RESULT_OK) {
+                // Add contact id to task
+                Uri contactUri = data.getData();
+                String[] projection = new String[] {
+                        Contacts._ID,
+                };
+                Cursor cursor = getContentResolver()
+                        .query(contactUri, projection, null, null, null);
+                cursor.moveToFirst();
+                detailedTask.addContact(String.valueOf(cursor.getLong(COL_CONTACT_ID)));
+                cursor.close();
+                getSupportLoaderManager().restartLoader(CONTACT_LOADER, null, this);
+            }
+        }
     }
 
     //===========================================
@@ -356,26 +467,26 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         Log.v(LOG_TAG, ": onCreateLoader().");
 
-        Uri contactUri = ContactsContract.Contacts.CONTENT_URI;
+        Uri contactUri = Contacts.CONTENT_URI;
 
         // Prepare contacts
         ArrayList<String> contacts = detailedTask.getContacts();
 
-        // TODO SETUP LOADER - right contacts??
         // Define projection
         String[] projection = new String[] {
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+                Contacts._ID,
+                Contacts.LOOKUP_KEY,
+                Contacts.DISPLAY_NAME_PRIMARY
         };
 
-        String selection = ContactsContract.Contacts._ID + " in (" +
+        // Define selection and set selection arguments
+        String selection = Contacts._ID + " in (" +
                 TextUtils.join(",", Collections.nCopies(contacts.size(), "?")) +
                 ")";
-        Log.v(LOG_TAG, detailedTask.getContacts().toString());
         String[] selectionArgs = contacts.toArray(new String[contacts.size()]);
 
-        String orderBy = ContactsContract.Data.DISPLAY_NAME_PRIMARY;
+        // Define sort order
+        String orderBy = Data.DISPLAY_NAME_PRIMARY;
 
         return new CursorLoader(this, contactUri, projection, selection, selectionArgs, orderBy);
     }
@@ -383,9 +494,6 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.v(LOG_TAG, ": onLoadFinished().");
-        cursor.moveToFirst();
-        Log.i(LOG_TAG, cursor.getString(COL_CONTACT_NAME));
-        cursor.moveToPrevious();
         contactAdapter.swapCursor(cursor);
     }
 
@@ -394,6 +502,5 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         Log.v(LOG_TAG, ": onLoaderReset().");
         contactAdapter.swapCursor(null);
     }
-
 
 }
