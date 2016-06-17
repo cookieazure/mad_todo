@@ -13,6 +13,7 @@ public class User {
     @SerializedName("pwd")
     private String pwd;
 
+    @SuppressWarnings("unused")
     // Default constructor
     public User(){
 
@@ -23,18 +24,22 @@ public class User {
         this.pwd = pwd;
     }
 
+    @SuppressWarnings("unused")
     public String getPwd() {
         return pwd;
     }
 
+    @SuppressWarnings("unused")
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
 
+    @SuppressWarnings("unused")
     public String getMail() {
         return mail;
     }
 
+    @SuppressWarnings("unused")
     public void setMail(String mail) {
         this.mail = mail;
     }

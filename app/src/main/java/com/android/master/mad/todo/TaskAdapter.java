@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by MISSLERT on 31.05.2016.
@@ -77,9 +78,9 @@ public class TaskAdapter extends CursorAdapter {
             cal.setTimeInMillis(expiry);
             String date;
             if(cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0){
-                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format)).format(new Date(expiry));
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format), Locale.getDefault()).format(new Date(expiry));
             } else {
-                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_datetime_format)).format(new Date(expiry));
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_datetime_format), Locale.getDefault()).format(new Date(expiry));
             }
             viewHolder.date.setText(date);
         }

@@ -2,13 +2,11 @@ package com.android.master.mad.todo.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by MISSLERT on 31.05.2016.
@@ -34,9 +32,6 @@ public class Task implements Parcelable {
     @SerializedName("contacts")
     private String simpleContacts;
     private transient ArrayList<String> contacts;
-    // @SerializedName("location")
-    // private SimpleLocation location;
-
 
     // Default constructor
     public Task() {
@@ -124,6 +119,7 @@ public class Task implements Parcelable {
         return contacts;
     }
 
+    @SuppressWarnings("unused")
     public void setContacts(ArrayList<String> contacts) {
         this.contacts = contacts;
         updateSimpleContacts();
@@ -140,14 +136,6 @@ public class Task implements Parcelable {
         updateSimpleContacts();
     }
 
-//    public SimpleLocation getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(SimpleLocation location) {
-//        this.location = location;
-//    }
-
     private void updateSimpleContacts(){
         if(contacts == null){
             this.simpleContacts = null;
@@ -162,9 +150,7 @@ public class Task implements Parcelable {
         } else {
             String[] converter = this.simpleContacts.split(", ");
             this.contacts = new ArrayList<>();
-            for (String item: converter) {
-                this.contacts.add(item);
-            }
+            Collections.addAll(this.contacts, converter);
         }
     }
 

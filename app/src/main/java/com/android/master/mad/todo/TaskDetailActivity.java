@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
@@ -36,7 +35,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.master.mad.todo.data.Task;
 
@@ -45,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by MISSLERT on 07.06.2016.
@@ -304,11 +303,11 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void setDateDisplay(){
-        editDate.setText( new SimpleDateFormat(getString(R.string.simple_date_format)).format(new Date(currentDateTime.getTimeInMillis())) );
+        editDate.setText( new SimpleDateFormat(getString(R.string.simple_date_format), Locale.getDefault()).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     private void setTimeDisplay(){
-        editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format)).format(new Date(currentDateTime.getTimeInMillis())) );
+        editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format), Locale.getDefault()).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     private String isContactCallable(long contactId){

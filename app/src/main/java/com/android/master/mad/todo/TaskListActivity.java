@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
@@ -63,15 +62,15 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     // private int currentPosition = ListView.INVALID_POSITION;
 
     // Column names for task list view
-    private static final String[] TASK_COLUMNS = {
-            TaskContract.Task.TABLE_NAME + "." + TaskContract.Task._ID,
-            TaskContract.Task.COLUMN_NAME,
-            TaskContract.Task.COLUMN_DESC,
-            TaskContract.Task.COLUMN_DATE,
-            TaskContract.Task.COLUMN_DONE,
-            TaskContract.Task.COLUMN_FAV,
-            TaskContract.Task.COLUMN_CONTACTS
-    };
+//    private static final String[] TASK_COLUMNS = {
+//            TaskContract.Task.TABLE_NAME + "." + TaskContract.Task._ID,
+//            TaskContract.Task.COLUMN_NAME,
+//            TaskContract.Task.COLUMN_DESC,
+//            TaskContract.Task.COLUMN_DATE,
+//            TaskContract.Task.COLUMN_DONE,
+//            TaskContract.Task.COLUMN_FAV,
+//            TaskContract.Task.COLUMN_CONTACTS
+//    };
 
     // Indices for TASK_COLUMNS
     //static final int COL_TASK_ID = 0;
