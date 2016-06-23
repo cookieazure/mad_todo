@@ -77,7 +77,7 @@ public class TaskSQLiteOperationService implements ITaskSQLiteOperations{
         values.put(TaskContract.Task.COLUMN_DATE, task.getExpiry());
         values.put(TaskContract.Task.COLUMN_DONE, task.isDone());
         values.put(TaskContract.Task.COLUMN_FAV, task.isFavourite());
-        values.put(TaskContract.Task.COLUMN_CONTACTS, task.getSimpleContacts());
+        values.put(TaskContract.Task.COLUMN_CONTACTS, task.getContactsString());
         return values;
     }
 }

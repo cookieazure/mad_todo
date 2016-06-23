@@ -71,6 +71,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
         Log.v(LOG_TAG, ": evaluateConnection().");
         if(result){
             Log.i(LOG_TAG, "Web interface available.");
+            connectionDialog.dismiss();
             Intent intent = new Intent(this,LoginActivity.class);
             startActivityForResult(intent, LOGIN_REQUEST);
         } else{
@@ -96,7 +97,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
     private void checkWebInterfaceAvailability(){
         Log.v(LOG_TAG, ": checkWebInterfaceAvailability().");
         if(checkConnection()){
-            Log.i(LOG_TAG, "Connection is true, check server connection.");
+            Log.d(LOG_TAG, "Connection is available, check server connection.");
             connectionDialog = new ProgressDialog(this);
             connectionDialog.setMessage(getString(R.string.checking_server_connection));
             connectionDialog.show();
@@ -209,7 +210,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
             try {
                 webServiceTasks = callReadAll.execute().body();
             } catch (IOException e){
-                Log.i(LOG_TAG, " : readAll() not successful.");
+                Log.w(LOG_TAG, " : readAll() not successful.");
             }
 
             // If there is no local data, insert data from webservice.
@@ -263,6 +264,7 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
             Intent intent = new Intent(this, TaskListActivity.class);
             intent.putExtra(getString(R.string.intent_web_service), true);
             startActivity(intent);
+            connectionDialog.dismiss();
             finish();
         }
     }

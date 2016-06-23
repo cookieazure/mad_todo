@@ -48,7 +48,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private static final int REQUEST_READ_CONTACTS = 4;
 
     // Database & Webservice references
-    private boolean online;
+    private Boolean online;
     private ITaskCrudOperations webServiceConnector;
     private TaskSQLiteOperationService sqLiteConnector;
 
@@ -86,11 +86,19 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     //===========================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         Log.v(LOG_TAG, ": onCreate().");
-        online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
-        setContentView(R.layout.activity_task_list);
 
+        if (online == null) {
+            if(savedInstanceState != null){
+                online = savedInstanceState.getBoolean(getString(R.string.instance_web_service), false);
+            } else {
+                online = getIntent().getBooleanExtra(getString(R.string.intent_web_service), false);
+            }
+        }
+
+        setContentView(R.layout.activity_task_list);
+        Log.d(LOG_TAG, ": status online is " + online);
         // Read shared preferences for sort order
         SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
         sortOrder = sharedPreferences.getInt(getString(R.string.shared_pref_sort_order), 1);
@@ -106,9 +114,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         }
 
         setupSQLiteConnector();
-        if(online){
-            setupWebServiceConnector();
-        }
+        setupWebServiceConnector();
 
         ListView taskList = (ListView) findViewById(R.id.task_list);
         taskAdapter = new TaskAdapter(this, null, 0);
@@ -167,6 +173,11 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(getString(R.string.intent_web_service), online);
+        super.onSaveInstanceState(savedInstanceState);
+    }
     //===========================================
     // INPUT METHODS
     //===========================================
@@ -221,17 +232,24 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     // DATABASE / WEBSERVICE MODIFICATION METHODS
     //===========================================
     private void setupSQLiteConnector(){
-        sqLiteConnector = new TaskSQLiteOperationService(this);
+        Log.v(LOG_TAG, ": setupSQLiteConnector().");
+        if(sqLiteConnector == null) {
+            sqLiteConnector = new TaskSQLiteOperationService(this);
+        }
     }
 
     private void setupWebServiceConnector(){
-        webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
+        Log.v(LOG_TAG, ": setupWebServiceConnector().");
+        if(online && webServiceConnector == null){
+            webServiceConnector = RetrofitServiceGenerator.createService(ITaskCrudOperations.class);
+        }
     }
 
     private void updateTask(Task task){
         Log.v(LOG_TAG, ": updateTask().");
         sqLiteConnector.update(task.getId(), task);
-        Log.i(LOG_TAG, ": updated task " + task.toString());
+        Log.d(LOG_TAG, ": updated task " + task.toString());
+        Log.d(LOG_TAG, ": status online is " + online);
         if(online){
             Call<Task> call = webServiceConnector.update(task.getId(),task);
             call.enqueue(new Callback<Task>() {
@@ -255,7 +273,8 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private void insertTask(Task task){
         Log.v(LOG_TAG, ": insertTask().");
         Uri taskUri = sqLiteConnector.insert(task);
-        Log.i(LOG_TAG, ": inserted new task " + task.toString());
+        Log.d(LOG_TAG, ": inserted new task " + task.toString());
+        Log.d(LOG_TAG, ": status online is " + online);
         // Update task to reflect assigned SQLite ID before inserting into webservice
         task.setId(TaskContract.Task.getTaskIdFromUri(taskUri));
         if(online){
@@ -281,7 +300,8 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     private void deleteTask(Task task){
         Log.v(LOG_TAG, ": deleteTask().");
         sqLiteConnector.delete(task.getId());
-        Log.i(LOG_TAG, ": deleted task " + task.toString());
+        Log.d(LOG_TAG, ": deleted task " + task.toString());
+        Log.d(LOG_TAG, ": status online is " + online);
         if(online){
             Call<Boolean> call = webServiceConnector.delete(task.getId());
             call.enqueue(new Callback<Boolean>() {

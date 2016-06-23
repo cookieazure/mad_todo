@@ -30,7 +30,7 @@ public class Utility {
             task.setExpiry(cursor.getLong(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
             task.setDone(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE)) != 0);
             task.setFavourite(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
-            task.setSimpleContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
+            task.setContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
             tasks.add(task);
             Log.v(LOG_TAG, " : create Task from cursor: " + task.toString());
             cursor.moveToNext();
@@ -49,7 +49,7 @@ public class Utility {
         task.setExpiry(cursor.getLong(cursor.getColumnIndex(TaskContract.Task.COLUMN_DATE)));
         task.setDone(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_DONE)) != 0);
         task.setFavourite(cursor.getInt(cursor.getColumnIndex(TaskContract.Task.COLUMN_FAV)) != 0);
-        task.setSimpleContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
+        task.setContacts(cursor.getString(cursor.getColumnIndex(TaskContract.Task.COLUMN_CONTACTS)));
         Log.v(LOG_TAG, " : create single task from cursor: " + task.toString());
         return task;
     }

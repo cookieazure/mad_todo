@@ -2,6 +2,7 @@ package com.android.master.mad.todo.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -30,8 +31,7 @@ public class Task implements Parcelable {
     private boolean favourite;
     // Associations
     @SerializedName("contacts")
-    private String simpleContacts;
-    private transient ArrayList<String> contacts;
+    private ArrayList<String> contacts;
 
     // Default constructor
     public Task() {
@@ -55,7 +55,10 @@ public class Task implements Parcelable {
     }
 
     public String toString() {
-        return "Task " + this.id + ": " + this.name + " - " + this.description + ", " + this.expiry;
+        return "Task " + this.id + ": " + this.name + " - " + this.description
+                + "(" + this.done + "/" + this.favourite + ")"
+                +  ", " + this.expiry
+                + " with associated contacts: " + this.contacts;
     }
 
     public long getId() {
@@ -106,52 +109,40 @@ public class Task implements Parcelable {
         this.favourite = favourite;
     }
 
-    public String getSimpleContacts() {
-        return simpleContacts;
-    }
-
-    public void setSimpleContacts(String simpleContacts) {
-        this.simpleContacts = simpleContacts;
-        updateContacts();
-    }
-
     public ArrayList<String> getContacts() {
         return contacts;
+    }
+
+    public String getContactsString() {
+        if(contacts != null){
+            return this.contacts.toString().substring(1, this.contacts.toString().length()-1 );
+        }
+        return null;
     }
 
     @SuppressWarnings("unused")
     public void setContacts(ArrayList<String> contacts) {
         this.contacts = contacts;
-        updateSimpleContacts();
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = new ArrayList<>();
+        if(contacts != null) {
+            String[] converter = contacts.split(", ");
+            Collections.addAll(this.contacts, converter);
+        }
     }
 
     public void addContact(String contact){
-        if(contacts == null) contacts = new ArrayList<>();
-        contacts.add(contact);
-        updateSimpleContacts();
+        if(!contacts.contains(contact)) contacts.add(contact);
+        Log.i("TASK: ", "contacts is: " + contacts);
+        Log.i("TASK: ", "contacts size: " + contacts.size());
     }
 
     public void removeContact(String contact){
         contacts.remove(contact);
-        updateSimpleContacts();
-    }
-
-    private void updateSimpleContacts(){
-        if(contacts == null){
-            this.simpleContacts = null;
-        } else {
-            this.simpleContacts = this.contacts.toString().substring(1, this.contacts.toString().length()-1 );
-        }
-    }
-
-    private void updateContacts(){
-        if(simpleContacts == null){
-            this.contacts = null;
-        } else {
-            String[] converter = this.simpleContacts.split(", ");
-            this.contacts = new ArrayList<>();
-            Collections.addAll(this.contacts, converter);
-        }
+        Log.i("TASK: ", "contacts size: " + contacts.size());
+        Log.i("TASK: ", "contacts is: " + contacts);
     }
 
     public boolean hasContacts(){
@@ -167,22 +158,20 @@ public class Task implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeString(this.name);
-        dest.writeString(this.description);
         dest.writeLong(this.expiry);
+        dest.writeString(this.description);
         dest.writeByte(this.done ? (byte) 1 : (byte) 0);
         dest.writeByte(this.favourite ? (byte) 1 : (byte) 0);
-        dest.writeString(this.simpleContacts);
         dest.writeStringList(this.contacts);
     }
 
     protected Task(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
-        this.description = in.readString();
         this.expiry = in.readLong();
+        this.description = in.readString();
         this.done = in.readByte() != 0;
         this.favourite = in.readByte() != 0;
-        this.simpleContacts = in.readString();
         this.contacts = in.createStringArrayList();
     }
 

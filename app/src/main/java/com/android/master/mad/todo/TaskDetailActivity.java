@@ -145,7 +145,6 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
         } else {
             currentDateTime = Calendar.getInstance();
             currentDateTime.setTimeInMillis(detailedTask.getExpiry());
-            Log.i(LOG_TAG, ": " + currentDateTime.get(Calendar.MONTH));
             setDateDisplay();
             setTimeDisplay();
         }
@@ -466,10 +465,11 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         Log.v(LOG_TAG, ": onCreateLoader().");
 
-        Uri contactUri = Contacts.CONTENT_URI;
-
         // Prepare contacts
         ArrayList<String> contacts = detailedTask.getContacts();
+        if(contacts == null) contacts = new ArrayList<>();
+
+        Uri contactUri = Contacts.CONTENT_URI;
 
         // Define projection
         String[] projection = new String[] {

@@ -405,7 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Call<Boolean> call = webServiceAuthenticator.authenticateUser(user);
             try {
                 Boolean authResult = call.execute().body();
-                Log.i(LOG_TAG, " : Auth complete (" + authResult +").");
+                Log.d(LOG_TAG, " : Auth complete (" + authResult +").");
                 return authResult;
             } catch (IOException e){
                 Log.i(LOG_TAG, " : Auth not successful.");
