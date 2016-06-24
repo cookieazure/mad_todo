@@ -23,9 +23,9 @@ import android.widget.ListView;
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
 import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
-import com.android.master.mad.todo.sync.TaskSQLiteOperationService;
 import com.android.master.mad.todo.helper.Utility;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
+import com.android.master.mad.todo.sync.TaskSQLiteOperationService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,10 +109,7 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        if (checkSelfPermission(READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-
+        checkPermissions();
         setupSQLiteConnector();
         setupWebServiceConnector();
 
@@ -323,8 +320,14 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
     }
 
     //===========================================
-    // SHARED PREFERENCES METHODS
+    // CONTROLLER METHODS
     //===========================================
+    private void checkPermissions() {
+        if (checkSelfPermission(READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+    }
+
     private void setAndSaveSortOrder(int newSortOrder){
         Log.v(LOG_TAG, ": setAndSaveSortOrder().");
         sortOrder = newSortOrder;
