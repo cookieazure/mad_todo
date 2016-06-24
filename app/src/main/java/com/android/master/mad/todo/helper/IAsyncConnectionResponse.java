@@ -1,4 +1,4 @@
-package com.android.master.mad.todo.sync;
+package com.android.master.mad.todo.helper;
 
 /**
  * Created by MISSLERT on 04.06.2016.

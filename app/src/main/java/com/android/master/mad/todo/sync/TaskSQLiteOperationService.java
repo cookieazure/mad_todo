@@ -1,4 +1,4 @@
-package com.android.master.mad.todo.helper;
+package com.android.master.mad.todo.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
-import com.android.master.mad.todo.sync.ITaskSQLiteOperations;
 
 import java.util.ArrayList;
 import java.util.List;
