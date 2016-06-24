@@ -14,11 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.android.master.mad.todo.data.Task;
-import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
+import com.android.master.mad.todo.sync.RetrofitServiceGenerator;
 import com.android.master.mad.todo.sync.TaskSQLiteOperationService;
 import com.android.master.mad.todo.helper.Utility;
-import com.android.master.mad.todo.helper.IAsyncConnectionResponse;
-import com.android.master.mad.todo.helper.IAsyncSyncResponse;
+import com.android.master.mad.todo.sync.IAsyncConnectionResponse;
+import com.android.master.mad.todo.sync.IAsyncSyncResponse;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
 
 import java.io.IOException;

@@ -22,7 +22,7 @@ import android.widget.ListView;
 
 import com.android.master.mad.todo.data.Task;
 import com.android.master.mad.todo.data.TaskContract;
-import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
+import com.android.master.mad.todo.sync.RetrofitServiceGenerator;
 import com.android.master.mad.todo.helper.Utility;
 import com.android.master.mad.todo.sync.ITaskCrudOperations;
 import com.android.master.mad.todo.sync.TaskSQLiteOperationService;

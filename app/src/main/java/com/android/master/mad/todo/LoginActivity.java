@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.master.mad.todo.data.User;
-import com.android.master.mad.todo.helper.RetrofitServiceGenerator;
+import com.android.master.mad.todo.sync.RetrofitServiceGenerator;
 import com.android.master.mad.todo.sync.ITaskAuthOperations;
 
 import java.io.IOException;
@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         Log.v(LOG_TAG, " : isEmailValid().");
-        return email.matches("[A-z0-9._%+-]+@[A-z0-9.-]*\\.[A-z]{2,}");
+        return email.matches("[A-z0-9][A-z0-9._%+-]*@[A-z0-9.-]*\\.[A-z]{2,}");
     }
 
     private boolean isPasswordValid(String password) {
