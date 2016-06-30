@@ -87,6 +87,8 @@ public class StartupActivity extends AppCompatActivity implements IAsyncConnecti
                     Intent intent = new Intent(getApplicationContext(), TaskListActivity.class);
                     intent.putExtra(getString(R.string.intent_web_service), false);
                     startActivity(intent);
+                    connectionDialog.dismiss();
+                    finish();
                 }
             });
             AlertDialog dialog = builder.create();
