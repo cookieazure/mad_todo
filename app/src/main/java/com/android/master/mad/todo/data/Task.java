@@ -135,14 +135,14 @@ public class Task implements Parcelable {
 
     public void addContact(String contact){
         if(!contacts.contains(contact)) contacts.add(contact);
-        Log.i("TASK: ", "contacts is: " + contacts);
-        Log.i("TASK: ", "contacts size: " + contacts.size());
+        Log.v("TASK: ", "contacts is: " + contacts);
+        Log.v("TASK: ", "contacts size: " + contacts.size());
     }
 
     public void removeContact(String contact){
         contacts.remove(contact);
-        Log.i("TASK: ", "contacts size: " + contacts.size());
-        Log.i("TASK: ", "contacts is: " + contacts);
+        Log.v("TASK: ", "contacts size: " + contacts.size());
+        Log.v("TASK: ", "contacts is: " + contacts);
     }
 
     public boolean hasContacts(){

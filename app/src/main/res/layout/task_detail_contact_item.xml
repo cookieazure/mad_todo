@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/contact_item_share"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentStart="true"
         tools:text="Vorname Nachname" />
 
 
@@ -19,15 +21,16 @@
         android:id="@+id/contact_item_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/contact_item_space"
+        android:layout_toStartOf="@+id/contact_item_space"
         android:layout_gravity="center_vertical"
         android:onClick="onItemClickContact"
-        android:background="@drawable/ic_action_share"/>
+        android:background="@drawable/ic_action_share"
+        android:contentDescription="@string/share_button"/>
 
     <Space
         android:id="@+id/contact_item_space"
-        android:layout_toLeftOf="@+id/contact_item_delete"
-        android:layout_width="16dp"
+        android:layout_toStartOf="@+id/contact_item_delete"
+        android:layout_width="1dp"
         android:layout_height="match_parent" />
 
     <ImageButton
@@ -35,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-
         android:layout_gravity="center_vertical"
         android:onClick="onItemClickContact"
-        android:background="@drawable/ic_action_cancel"/>
+        android:background="@drawable/ic_action_cancel"
+        android:contentDescription="@string/delete_button"/>
 </RelativeLayout>

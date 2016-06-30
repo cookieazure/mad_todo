@@ -4,8 +4,8 @@
     <string name="button_confirm">Confirm</string>
 
     <!-- Task Splash Screen-->
-    <string name="checking_server_connection">Checking server connection...</string>
-    <string name="syncing_with_server">Syncing data with web server...</string>
+    <string name="checking_server_connection">Checking server connection…</string>
+    <string name="syncing_with_server">Syncing data with web server…</string>
     <string name="message_title_webservice_unavailable">The web interface is not available.</string>
     <string name="message_webservice_unavailable">Only local storage is used.</string>
 
@@ -44,4 +44,6 @@
     <string name="menu_contact_show">Display Contact</string>
     <string name="menu_contact_text">Send Text</string>
     <string name="menu_contact_mail">Send Email</string>
+    <string name="share_button">Share Button</string>
+    <string name="delete_button">Delete Button</string>
 </resources>

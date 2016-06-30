@@ -18,7 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:focusableInTouchMode="false"
-        android:layout_toEndOf="@+id/task_item_check_done">
+        android:layout_toEndOf="@+id/task_item_check_done"
+        tools:ignore="RelativeOverlap">
 
         <TextView
             android:id="@+id/task_item_name"
@@ -40,7 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
         android:layout_gravity="center_vertical"
         android:onClick="onItemClickCheckbox"
         style="?android:attr/starStyle"/>

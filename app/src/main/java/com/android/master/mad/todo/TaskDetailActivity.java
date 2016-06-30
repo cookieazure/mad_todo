@@ -202,6 +202,13 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             menu.findItem(R.id.contact_text).setVisible(false);
         } else {
             updateDetailedTask();
+            // Update title
+            String defaultText = (String) menu.findItem(R.id.contact_text).getTitle();
+            Log.w(LOG_TAG, " default Text is: " + defaultText);
+            defaultText += " [" + contactPhone + "]";
+            Log.w(LOG_TAG, " updated default Text is: " + defaultText);
+            menu.findItem(R.id.contact_text).setTitle(defaultText);
+            // Intent
             Intent textContactIntent = new Intent(Intent.ACTION_SENDTO);
             textContactIntent.setData(Uri.parse("smsto:"+contactPhone));
             textContactIntent.putExtra("sms_body", detailedTask.getName() + ": " + detailedTask.getDescription());
@@ -212,6 +219,11 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             menu.findItem(R.id.contact_mail).setVisible(false);
         } else {
             updateDetailedTask();
+            // Update title
+            String defaultText = (String) menu.findItem(R.id.contact_mail).getTitle();
+            defaultText += " [" + contactMail + "]";
+            menu.findItem(R.id.contact_mail).setTitle(defaultText);
+            // Intent
             Intent mailContactIntent = new Intent(Intent.ACTION_SEND);
             mailContactIntent.setType("*/*");
             mailContactIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(contactMail)} );
