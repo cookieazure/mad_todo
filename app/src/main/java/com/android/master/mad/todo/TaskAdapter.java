@@ -78,9 +78,9 @@ public class TaskAdapter extends CursorAdapter {
             cal.setTimeInMillis(expiry);
             String date;
             if(cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0){
-                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format), Locale.getDefault()).format(new Date(expiry));
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_date_format), Locale.GERMAN).format(new Date(expiry));
             } else {
-                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_datetime_format), Locale.getDefault()).format(new Date(expiry));
+                date = new SimpleDateFormat(view.getResources().getString(R.string.simple_datetime_format), Locale.GERMAN).format(new Date(expiry));
             }
             viewHolder.date.setText(date);
         }

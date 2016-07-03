@@ -146,7 +146,9 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             currentDateTime = Calendar.getInstance();
             currentDateTime.setTimeInMillis(detailedTask.getExpiry());
             setDateDisplay();
-            setTimeDisplay();
+            if(!(currentDateTime.get(Calendar.HOUR) == 0 && currentDateTime.get(Calendar.MINUTE) == 0)){
+                setTimeDisplay();
+            }
         }
 
         editDescription = (EditText) findViewById(R.id.task_detail_description);
@@ -204,9 +206,7 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             updateDetailedTask();
             // Update title
             String defaultText = (String) menu.findItem(R.id.contact_text).getTitle();
-            Log.w(LOG_TAG, " default Text is: " + defaultText);
             defaultText += " [" + contactPhone + "]";
-            Log.w(LOG_TAG, " updated default Text is: " + defaultText);
             menu.findItem(R.id.contact_text).setTitle(defaultText);
             // Intent
             Intent textContactIntent = new Intent(Intent.ACTION_SENDTO);
@@ -224,9 +224,10 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
             defaultText += " [" + contactMail + "]";
             menu.findItem(R.id.contact_mail).setTitle(defaultText);
             // Intent
-            Intent mailContactIntent = new Intent(Intent.ACTION_SEND);
-            mailContactIntent.setType("*/*");
-            mailContactIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(contactMail)} );
+            Intent mailContactIntent = new Intent(Intent.ACTION_SENDTO);
+            mailContactIntent.setType(getString(R.string.email_type));
+            mailContactIntent.setData(Uri.parse(getString(R.string.uri_mailto)));
+            mailContactIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{contactMail} );
             mailContactIntent.putExtra(Intent.EXTRA_SUBJECT, detailedTask.getName());
             mailContactIntent.putExtra(Intent.EXTRA_TEXT, detailedTask.getDescription());
             menu.findItem(R.id.contact_mail).setIntent(mailContactIntent);
@@ -314,11 +315,11 @@ public class TaskDetailActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void setDateDisplay(){
-        editDate.setText( new SimpleDateFormat(getString(R.string.simple_date_format), Locale.getDefault()).format(new Date(currentDateTime.getTimeInMillis())) );
+        editDate.setText( new SimpleDateFormat(getString(R.string.simple_date_format), Locale.GERMAN).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     private void setTimeDisplay(){
-        editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format), Locale.getDefault()).format(new Date(currentDateTime.getTimeInMillis())) );
+        editTime.setText( new SimpleDateFormat(getString(R.string.simple_time_format), Locale.GERMAN).format(new Date(currentDateTime.getTimeInMillis())) );
     }
 
     private String isContactCallable(long contactId){

@@ -46,4 +46,6 @@
     <string name="menu_contact_mail">Send Email</string>
     <string name="share_button">Share Button</string>
     <string name="delete_button">Delete Button</string>
+    <string name="uri_mailto">mailto:</string>
+    <string name="email_type">*/*</string>
 </resources>

@@ -244,78 +244,90 @@ public class TaskListActivity extends AppCompatActivity implements LoaderManager
 
     private void updateTask(Task task){
         Log.v(LOG_TAG, ": updateTask().");
-        sqLiteConnector.update(task.getId(), task);
-        Log.d(LOG_TAG, ": updated task " + task.toString());
-        Log.d(LOG_TAG, ": status online is " + online);
-        if(online){
-            Call<Task> call = webServiceConnector.update(task.getId(),task);
-            call.enqueue(new Callback<Task>() {
-                @Override
-                public void onResponse(Call<Task> call, Response<Task> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(LOG_TAG, ": Webservice updated task successfully (" + response.body().toString() + ")");
-                    } else {
-                        Log.i(LOG_TAG, ": Error updating webservice, response not successful.");
+        int result = sqLiteConnector.update(task.getId(), task);
+        if(result != 0){
+            Log.d(LOG_TAG, ": updated task " + task.toString());
+            Log.d(LOG_TAG, ": status online is " + online);
+            if(online){
+                Call<Task> call = webServiceConnector.update(task.getId(),task);
+                call.enqueue(new Callback<Task>() {
+                    @Override
+                    public void onResponse(Call<Task> call, Response<Task> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(LOG_TAG, ": Webservice updated task successfully (" + response.body().toString() + ")");
+                        } else {
+                            Log.i(LOG_TAG, ": Error updating webservice, response not successful.");
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Task> call, Throwable t) {
-                    Log.i(LOG_TAG, ": Error updating webservice - " + t.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Task> call, Throwable t) {
+                        Log.i(LOG_TAG, ": Error updating webservice - " + t.getMessage());
+                    }
+                });
+            }
+        } else {
+            Log.e(LOG_TAG, ": failed to update task " + task.toString());
         }
     }
 
     private void insertTask(Task task){
         Log.v(LOG_TAG, ": insertTask().");
         Uri taskUri = sqLiteConnector.insert(task);
-        Log.d(LOG_TAG, ": inserted new task " + task.toString());
-        Log.d(LOG_TAG, ": status online is " + online);
-        // Update task to reflect assigned SQLite ID before inserting into webservice
-        task.setId(TaskContract.Task.getTaskIdFromUri(taskUri));
-        if(online){
-            Call<Task> call = webServiceConnector.insert(task);
-            call.enqueue(new Callback<Task>() {
-                @Override
-                public void onResponse(Call<Task> call, Response<Task> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(LOG_TAG, ": Webservice inserted task successfully (" + response.body().toString() + ")");
-                    } else {
-                        Log.i(LOG_TAG, ": Error inserting into webservice, response not successful.");
+        if(taskUri != null){
+            Log.d(LOG_TAG, ": inserted new task " + task.toString());
+            Log.d(LOG_TAG, ": status online is " + online);
+            // Update task to reflect assigned SQLite ID before inserting into webservice
+            task.setId(TaskContract.Task.getTaskIdFromUri(taskUri));
+            if(online){
+                Call<Task> call = webServiceConnector.insert(task);
+                call.enqueue(new Callback<Task>() {
+                    @Override
+                    public void onResponse(Call<Task> call, Response<Task> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(LOG_TAG, ": Webservice inserted task successfully (" + response.body().toString() + ")");
+                        } else {
+                            Log.i(LOG_TAG, ": Error inserting into webservice, response not successful.");
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Task> call, Throwable t) {
-                    Log.i(LOG_TAG, ": Error inserting into webservice - " + t.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Task> call, Throwable t) {
+                        Log.i(LOG_TAG, ": Error inserting into webservice - " + t.getMessage());
+                    }
+                });
+            }
+        } else {
+            Log.e(LOG_TAG, ": failed to insert new task " + task.toString());
         }
     }
 
     private void deleteTask(Task task){
         Log.v(LOG_TAG, ": deleteTask().");
-        sqLiteConnector.delete(task.getId());
-        Log.d(LOG_TAG, ": deleted task " + task.toString());
-        Log.d(LOG_TAG, ": status online is " + online);
-        if(online){
-            Call<Boolean> call = webServiceConnector.delete(task.getId());
-            call.enqueue(new Callback<Boolean>() {
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(LOG_TAG, ": Webservice deleted task successfully (" + response.body().toString() + ")");
-                    } else {
-                        Log.i(LOG_TAG, ": Error deleting in webservice, response not successful.");
+        int result = sqLiteConnector.delete(task.getId());
+        if(result != 0){
+            Log.d(LOG_TAG, ": deleted task " + task.toString());
+            Log.d(LOG_TAG, ": status online is " + online);
+            if(online){
+                Call<Boolean> call = webServiceConnector.delete(task.getId());
+                call.enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(LOG_TAG, ": Webservice deleted task successfully (" + response.body().toString() + ")");
+                        } else {
+                            Log.i(LOG_TAG, ": Error deleting in webservice, response not successful.");
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
-                    Log.i(LOG_TAG, ": Error deleting in webservice - " + t.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        Log.i(LOG_TAG, ": Error deleting in webservice - " + t.getMessage());
+                    }
+                });
+            }
+        } else {
+            Log.e(LOG_TAG, ": failed to delete task " + task.toString());
         }
     }
 
